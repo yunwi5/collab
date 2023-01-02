@@ -1,0 +1,2 @@
+export TF_VAR_aws_access_key="AKIA3ENQOO7QI6UFLWZT"
+export TF_VAR_aws_secret_key="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"
