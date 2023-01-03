@@ -4,7 +4,7 @@ resource "aws_dynamodb_table" "question_table" {
   read_capacity  = 10
   write_capacity = 10
   hash_key       = "quizId"
-  range_key      = "questionId"
+  range_key      = "createdAt"
 
   attribute {
     name = "quizId"
@@ -12,7 +12,7 @@ resource "aws_dynamodb_table" "question_table" {
   }
 
   attribute {
-    name = "questionId"
+    name = "createdAt"
     type = "S"
   }
 
