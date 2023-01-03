@@ -54,6 +54,18 @@ variable "article_collaborator_table_index" {
   default = "ArticleCollaboratorIndex"
 }
 
+variable "program_table_name" {
+  default = "Program"
+}
+
+variable "program_collaborator_table_name" {
+  default = "ProgramCollaborator"
+}
+
+variable "program_collaborator_table_index" {
+  default = "ProgramCollaboratorIndex"
+}
+
 variable "comment_table_name" {
   default = "Comment"
 }
