@@ -36,3 +36,10 @@ lerna-debug.log*
 
 # private script
 .bashrc
+
+# terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info*
+*.terraform.lock.hcl

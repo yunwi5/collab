@@ -2,16 +2,22 @@ variable "aws_region" {
   default = "ap-southeast-2"
 }
 
-# export TF_VAR_aws_access_key="<value>"
-variable "aws_access_key" {
-  default = ""
-  type    = string
-  description = "This is the aws access key input provided by an env variable."
+variable "environment" {
+  default = "development"
 }
 
-# export TF_VAR_aws_secret_key="<value>"
-variable "aws_secret_key" {
-  default = ""
-  type    = string
-  description = "This is the aws secret key input provided by an env variable."
+variable "app_name" {
+  default = "Collab"
+}
+
+variable "user_table_name" {
+  default = "User"
+}
+
+variable "user_table_index_name" {
+  default = "UserIndex"
+}
+
+variable "quiz_table_name" {
+  default = "Quiz"
 }
