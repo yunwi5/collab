@@ -18,7 +18,6 @@ resource "aws_dynamodb_table" "user_table" {
   global_secondary_index {
     name               = var.user_table_index_name
     hash_key           = "userName"
-    # range_key          = "TopScore"
     write_capacity     = 2
     read_capacity      = 2
     projection_type    = "INCLUDE"
