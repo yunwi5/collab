@@ -1,0 +1,35 @@
+service: collab-backend
+
+useDotenv: true
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    noPrependStageInUrl: true
+
+package:
+  exclude:
+    - terraform/**
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  region: ap-southeast-2
+  # environment: 
+
+
+functions:
+  main:
+    handler: dist/serverless.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          path: graphql
+          method: ANY
+          cors: true
+
+# Deployed to URL: https://8kylmrl1lb.execute-api.ap-southeast-2.amazonaws.com/prod/

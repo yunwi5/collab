@@ -43,3 +43,8 @@ lerna-debug.log*
 *.tfstate.backup
 *.tfstate.lock.info*
 *.terraform.lock.hcl
+
+
+:memory
+
+.serverless
