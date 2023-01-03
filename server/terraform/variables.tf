@@ -14,10 +14,22 @@ variable "user_table_name" {
   default = "User"
 }
 
-variable "user_table_index_name" {
+variable "user_table_name_index" {
   default = "UserIndex"
 }
 
 variable "quiz_table_name" {
   default = "Quiz"
+}
+
+variable "question_table_name" {
+  default = "Question"
+}
+
+variable "attempt_history_table_name" {
+  default = "AttemptHistory"
+}
+
+variable "attempt_history_table_user_index" {
+  default = "AttemptHistoryIndex"
 }
