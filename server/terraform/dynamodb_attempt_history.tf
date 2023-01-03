@@ -18,17 +18,17 @@ resource "aws_dynamodb_table" "attempt_history_table" {
   }
 
   attribute {
-     name = "userId"
-     type = "S"
+    name = "userId"
+    type = "S"
   }
 
   global_secondary_index {
-    name               = var.attempt_history_table_user_index
-    hash_key           = "userId"
-    range_key          = "timestamp"
-    write_capacity     = 2
-    read_capacity      = 2
-    projection_type    = "ALL"
+    name            = var.attempt_history_table_user_index
+    hash_key        = "userId"
+    range_key       = "timestamp"
+    write_capacity  = 2
+    read_capacity   = 2
+    projection_type = "ALL"
   }
 
   tags = {
