@@ -15,7 +15,7 @@ variable "user_table_name" {
 }
 
 variable "user_table_name_index" {
-  default = "UserIndex"
+  default = "UserNameIndex"
 }
 
 variable "quiz_table_name" {
@@ -31,9 +31,17 @@ variable "attempt_history_table_name" {
 }
 
 variable "attempt_history_table_user_index" {
-  default = "AttemptHistoryIndex"
+  default = "AttemptHistoryUserIndex"
 }
 
-variable "article_group_table_name" {
+variable "article_group_table_name" { 
   default = "ArticleGroup"
+}
+
+variable "article_table_name" {
+  default = "Article"
+}
+
+variable "article_table_creator_index" {
+  default = "ArticleCreatorIndex"
 }
