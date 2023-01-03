@@ -1,8 +1,8 @@
 resource "aws_dynamodb_table" "program_collaborator_table" {
-  name           = "${var.app_name}-${var.program_collaborator_table_name}"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "programId"
-  range_key      = "userId"
+  name         = "${var.app_name}-${var.program_collaborator_table_name}"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "programId"
+  range_key    = "userId"
 
   attribute {
     name = "programId"

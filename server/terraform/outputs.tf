@@ -33,6 +33,17 @@ output "article_collaborator_table_arn" {
   description = "The AWS resource name of the article collaborator table."
 }
 
+output "program_table_arn" {
+  value       = aws_dynamodb_table.program_table.arn
+  description = "The AWS resource name of the program table."
+
+}
+
+output "program_collaborator_table_arn" {
+  value       = aws_dynamodb_table.program_collaborator_table.arn
+  description = "The AWS resource name of the program collaborator table."
+}
+
 output "comment_table_arn" {
   value       = aws_dynamodb_table.comment_table.arn
   description = "The AWS resource name of the comment table."
