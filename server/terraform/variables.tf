@@ -34,7 +34,7 @@ variable "attempt_history_table_user_index" {
   default = "AttemptHistoryUserIndex"
 }
 
-variable "article_group_table_name" { 
+variable "article_group_table_name" {
   default = "ArticleGroup"
 }
 
@@ -44,4 +44,16 @@ variable "article_table_name" {
 
 variable "article_table_creator_index" {
   default = "ArticleCreatorIndex"
+}
+
+variable "article_collaborator_table_name" {
+  default = "ArticleCollaborator"
+}
+
+variable "article_collaborator_table_index" {
+  default = "ArticleCollaboratorIndex"
+}
+
+variable "comment_table_name" {
+  default = "Comment"
 }

@@ -31,7 +31,7 @@ resource "aws_dynamodb_table" "article_table" {
   }
 
   tags = {
-    Name        = var.article_group_table_name
+    Name        = var.article_table_name
     Environment = var.environment
   }
 }
