@@ -14,6 +14,10 @@ export const envConfig = Object.freeze({
   GoogleClientId: process.env.GOOGLE_CLIENT_ID,
   GoogleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
   GoogleAuthCallback: process.env.GOOGLE_AUTH_CALLBACK,
+
+  GithubClientId: process.env.GITHUB_CLIENT_ID,
+  GithubClientSecret: process.env.GITHUB_CLIENT_SECRET,
+  GithubAuthCallback: process.env.GITHUB_AUTH_CALLBACK,
   JwtSecret: process.env.JWT_SECRET || 'thisshouldbeasecret',
   AppName: appName,
 });
