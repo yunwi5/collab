@@ -23,13 +23,14 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     done: VerifyCallback,
   ): Promise<any> {
     console.log(profile);
-    const { sub, provider, displayName, emails, picture } = profile;
+    const { sub, displayName, name, emails, picture } = profile;
+    const username = `${name.givenName} ${name.familyName}`;
 
     const user: SsoUserInput = {
       provider: AuthProvider.GOOGLE,
       email: emails[0].value,
       sub,
-      username: `${provider}#${displayName}`,
+      username: `${AuthProvider.GOOGLE}#${username}`,
       displayName,
       picture,
     };

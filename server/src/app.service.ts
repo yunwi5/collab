@@ -10,6 +10,10 @@ export class AppService {
       <div>
         <a href="http://localhost:8080/auth/google">Google Login</a>
       </div>
+      <br >
+      <div>
+        <a href="http://localhost:8080/auth/github">Github Login</a>
+      </div>
       </body>
     </html>`;
   }
