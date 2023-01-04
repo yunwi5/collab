@@ -64,7 +64,7 @@ export class AuthService {
 
   async ssoSignIn(ssoUser: SsoUserInput): Promise<SignInResponse> {
     // sub uniquely identifies each sso user
-    const existingUser = await this.userService.fincBySub(ssoUser.sub);
+    const existingUser = await this.userService.findBySub(ssoUser.sub);
 
     if (existingUser) {
       return {
