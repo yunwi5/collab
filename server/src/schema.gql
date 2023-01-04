@@ -1,0 +1,61 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
+"""The `Long` scalar type represents 52-bit integers"""
+scalar Long
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  removeUser(id: String!): User!
+  signIn(signInInput: SignInInput!): SignInResponse!
+  signUp(signUpInput: SignUpInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+}
+
+type Query {
+  user(id: String!): User!
+  users: [User!]!
+}
+
+input SignInInput {
+  password: String!
+  username: String!
+}
+
+type SignInResponse {
+  access_token: String!
+  user: User!
+}
+
+input SignUpInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
+input UpdateUserInput {
+  description: String
+  email: String
+  password: String
+  picture: String
+  userId: String!
+  username: String
+}
+
+type User {
+  createdAt: Long
+  description: String
+  email: String!
+  picture: String
+
+  """ID of the user"""
+  userId: String!
+  username: String!
+}
