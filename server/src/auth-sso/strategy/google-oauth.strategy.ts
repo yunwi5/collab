@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth2';
 import { envConfig } from 'src/config/env-config';
 import { SsoUserInput } from '../dto/sso-user.input';
+import { AuthProvider } from '../auth-sso.enum';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
@@ -22,15 +23,14 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     done: VerifyCallback,
   ): Promise<any> {
     console.log(profile);
-    const { sub, displayName, name, emails, picture } = profile;
-
-    const username = displayName || `${name.givenName} ${name.familyName}`;
+    const { sub, provider, displayName, emails, picture } = profile;
 
     const user: SsoUserInput = {
-      provider: 'google',
+      provider: AuthProvider.GOOGLE,
       email: emails[0].value,
       sub,
-      username,
+      username: `${provider}#${displayName}`,
+      displayName,
       picture,
     };
 

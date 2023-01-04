@@ -8,7 +8,10 @@ export class User extends Item {
   userId: string;
 
   @Field()
-  username: string;
+  username: string; // unique username
+
+  @Field()
+  displayName: string; // displayable name (non-unique)
 
   @Field()
   email: string;

@@ -53,6 +53,7 @@ input UpdateUserInput {
 type User {
   createdAt: Long
   description: String
+  displayName: String!
   email: String!
   picture: String
   provider: String

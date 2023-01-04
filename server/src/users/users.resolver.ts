@@ -10,7 +10,7 @@ import { UsersService } from './users.service';
 import { CreateUserInput, UpdateUserInput } from './dto';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { CurrentUser } from './decorator';
-import { JwtUser } from 'src/auth/types';
+import { JwtUser } from 'src/auth/auth.types';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -23,8 +23,7 @@ export class UsersResolver {
 
   @Query(() => [User], { name: 'users' })
   @UseGuards(JwtAuthGuard)
-  findAll(@CurrentUser() user) {
-    console.log(user);
+  findAll() {
     return this.usersService.findAll();
   }
 
@@ -41,7 +40,6 @@ export class UsersResolver {
     @CurrentUser() currentUser: JwtUser,
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
   ) {
-    console.log({ currentUser });
     if (currentUser.userId !== updateUserInput.userId) {
       throw new ForbiddenException('not allowed to update this user');
     }

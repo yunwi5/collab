@@ -15,6 +15,7 @@ export const userSchema = new dynamoose.Schema(
         name: dbTables.UserTableNameIndex,
       },
     },
+    displayName: String, // displayable name
     email: {
       type: String,
       validate: (value) => validateEmail(value.toString()),

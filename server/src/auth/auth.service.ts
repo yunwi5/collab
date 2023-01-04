@@ -56,6 +56,7 @@ export class AuthService {
 
     return await this.userService.create({
       username: signUpInput.username,
+      displayName: signUpInput.username,
       email: signUpInput.email,
       password: hashedPassword,
     });
