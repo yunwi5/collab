@@ -40,10 +40,10 @@ provider:
     JWT_SECRET: ${env:JWT_SECRET}
     GOOGLE_CLIENT_ID: ${env:GOOGLE_CLIENT_ID}
     GOOGLE_CLIENT_SECRET: ${env:GOOGLE_CLIENT_SECRET}
-    GOOGLE_AUTH_CALLBACK: https://8kylmrl1lb.execute-api.ap-southeast-2.amazonaws.com/prod/auth/google/callback
+    GOOGLE_AUTH_CALLBACK: ${env:GOOGLE_AUTH_CALLBACK}
     GITHUB_CLIENT_ID: ${env:GITHUB_CLIENT_ID}
     GITHUB_CLIENT_SECRET: ${env:GITHUB_CLIENT_SECRET}
-    GITHUB_AUTH_CALLBACK: https://8kylmrl1lb.execute-api.ap-southeast-2.amazonaws.com/prod/auth/github/callback
+    GITHUB_AUTH_CALLBACK: ${env:GITHUB_AUTH_CALLBACK}
     USER_TABLE: ${env:USER_TABLE}
     USER_TABLE_NAME_INDEX: ${env:USER_TABLE_NAME_INDEX}
     QUIZ_TABLE_NAME: ${env:QUIZ_TABLE_NAME}
