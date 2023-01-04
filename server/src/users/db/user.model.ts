@@ -1,5 +1,7 @@
 import * as dynamoose from 'dynamoose';
+
 import { dbTables } from 'src/config/env-config';
+import { AuthProviderList } from 'src/auth-sso/auth-sso.enum';
 import { validateEmail } from 'src/utils/string.util';
 import { User } from '../entities/user.entity';
 
@@ -27,6 +29,8 @@ export const userSchema = new dynamoose.Schema(
       validate: (value) => value.toString().length > 6,
     },
     picture: String,
+    provider: { type: String, enum: AuthProviderList },
+    sub: String,
   },
   {
     timestamps: true,

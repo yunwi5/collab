@@ -5,6 +5,7 @@
 input CreateUserInput {
   email: String!
   password: String!
+  picture: String
   username: String!
 }
 
@@ -54,6 +55,9 @@ type User {
   description: String
   email: String!
   picture: String
+  provider: String
+  sub: String
+  updatedAt: Long
 
   """ID of the user"""
   userId: String!

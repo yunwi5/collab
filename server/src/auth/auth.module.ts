@@ -19,5 +19,6 @@ import { UsersModule } from 'src/users/users.module';
     }),
   ],
   providers: [AuthService, AuthResolver, LocalStrategy, JwtStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}

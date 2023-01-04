@@ -7,6 +7,7 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 
 import { UsersService } from 'src/users/users.service';
+import { SsoUserInput } from 'src/auth-sso/dto/sso-user.input';
 import { User } from 'src/users/entities/user.entity';
 import { SignUpInput, SignInResponse } from './dto';
 
@@ -58,5 +59,24 @@ export class AuthService {
       email: signUpInput.email,
       password: hashedPassword,
     });
+  }
+
+  async ssoSignIn(ssoUser: SsoUserInput): Promise<SignInResponse> {
+    // sub uniquely identifies each sso user
+    const existingUser = await this.userService.fincBySub(ssoUser.sub);
+
+    if (existingUser) {
+      return {
+        access_token: this.makeJwtToken(existingUser),
+        user: existingUser,
+      };
+    } else {
+      const user = await this.userService.create(ssoUser);
+
+      return {
+        access_token: this.makeJwtToken(user),
+        user,
+      };
+    }
   }
 }

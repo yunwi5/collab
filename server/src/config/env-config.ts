@@ -11,6 +11,9 @@ export const envConfig = Object.freeze({
   AwsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
   AwsAccessSecret: process.env.AWS_SECRET_ACCESS_KEY,
   AwsRegion: process.env.AWS_REGION,
+  GoogleClientId: process.env.GOOGLE_CLIENT_ID,
+  GoogleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  GoogleAuthCallback: process.env.GOOGLE_AUTH_CALLBACK,
   JwtSecret: process.env.JWT_SECRET || 'thisshouldbeasecret',
   AppName: appName,
 });

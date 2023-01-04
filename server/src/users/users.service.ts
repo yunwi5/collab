@@ -57,6 +57,12 @@ export class UsersService {
     }
   }
 
+  // provider sub
+  async fincBySub(sub: string): Promise<User> {
+    const users = await UserModel.scan('sub').eq(sub).exec();
+    return users[0];
+  }
+
   async update(id: string, updateUserInput: UpdateUserInput): Promise<User> {
     try {
       const { userId, ...updateInput } = updateUserInput;

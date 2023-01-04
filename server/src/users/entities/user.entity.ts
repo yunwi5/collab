@@ -22,5 +22,14 @@ export class User extends Item {
   @Field(() => GraphQLLong, { nullable: true })
   createdAt?: number;
 
+  @Field(() => GraphQLLong, { nullable: true })
+  updatedAt: number;
+
   password: string;
+
+  @Field({ nullable: true })
+  provider?: string; // sso
+
+  @Field({ nullable: true })
+  sub?: string; // sso provider sub
 }
