@@ -22,3 +22,5 @@ CMD [ "yarn", "start"]
 # docker build . -t <user-name>/collab-backend
 # 2. Run the image
 # docker run -p 8080:8080 <user-name>/collab-backend
+# 3. Stop the container
+# docker stop $(docker ps -q --filter ancestor=938550590/collab-backend)
