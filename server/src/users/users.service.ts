@@ -3,6 +3,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import crypto from 'crypto';
 
 import { dbTables } from 'src/config/env-config';
 import { SsoUserInput } from 'src/auth-sso/dto';
