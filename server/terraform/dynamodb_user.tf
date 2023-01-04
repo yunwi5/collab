@@ -11,17 +11,17 @@ resource "aws_dynamodb_table" "user_table" {
   }
 
   attribute {
-    name = "userName"
+    name = "username"
     type = "S"
   }
 
   global_secondary_index {
     name               = var.user_table_name_index
-    hash_key           = "userName"
+    hash_key           = "username"
     write_capacity     = 2
     read_capacity      = 2
     projection_type    = "INCLUDE"
-    non_key_attributes = ["email", "picture", "password"]
+    non_key_attributes = ["email", "picture", "password", "createdAt"]
   }
 
   tags = {
