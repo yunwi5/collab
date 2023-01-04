@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { envConfig } from './config/env-config';
 
 @Injectable()
 export class AppService {
@@ -8,11 +9,11 @@ export class AppService {
       <body>
       <h1>Hello World from Nest!</h1>
       <div>
-        <a href="http://localhost:8080/auth/google">Google Login</a>
+        <a href="${envConfig.ServerURL}/auth/google">Google Login</a>
       </div>
       <br >
       <div>
-        <a href="http://localhost:8080/auth/github">Github Login</a>
+        <a href="${envConfig.ServerURL}/auth/github">Github Login</a>
       </div>
       </body>
     </html>`;
