@@ -11,6 +11,9 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+# Env
+.env
+
 # OS
 .DS_Store
 
@@ -44,7 +47,5 @@ lerna-debug.log*
 *.tfstate.lock.info*
 *.terraform.lock.hcl
 
-
-:memory
-
+# serverless offline
 .serverless
