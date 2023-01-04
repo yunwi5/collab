@@ -5,13 +5,14 @@ import {
 } from '@nestjs/common';
 
 import { dbTables } from 'src/config/env-config';
+import { SsoUserInput } from 'src/auth-sso/dto/sso-user.input';
 import { CreateUserInput, UpdateUserInput } from './dto';
 import { User } from './entities/user.entity';
 import { UserModel } from './db/user.model';
 
 @Injectable()
 export class UsersService {
-  async create(createUserInput: CreateUserInput): Promise<User> {
+  async create(createUserInput: CreateUserInput | SsoUserInput): Promise<User> {
     try {
       const userId: string = crypto.randomUUID();
       const newUser = await UserModel.create({ userId, ...createUserInput });
