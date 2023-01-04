@@ -7,7 +7,7 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 
 import { UsersService } from 'src/users/users.service';
-import { SsoUserInput } from 'src/auth-sso/dto/sso-user.input';
+import { SsoUserInput } from 'src/auth-sso/dto';
 import { User } from 'src/users/entities/user.entity';
 import { SignUpInput, SignInResponse } from './dto';
 

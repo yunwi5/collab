@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 
 import { dbTables } from 'src/config/env-config';
-import { SsoUserInput } from 'src/auth-sso/dto/sso-user.input';
+import { SsoUserInput } from 'src/auth-sso/dto';
 import { CreateUserInput, UpdateUserInput } from './dto';
 import { User } from './entities/user.entity';
 import { UserModel } from './db/user.model';
