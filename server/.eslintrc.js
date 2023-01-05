@@ -18,7 +18,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['dist/**/**', 'test/**'],
+  ignorePatterns: ['dist/**/**', 'test/**', 'jest*.config.js'],
   rules: {
     'prettier/prettier': 'error',
     'class-methods-use-this': 'off',
