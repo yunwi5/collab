@@ -9,10 +9,10 @@ module.exports = {
     'airbnb-base',
     'airbnb-typescript/base',
     'prettier',
-    'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
-  plugins: ['@typescript-eslint/eslint-plugin', 'prettier'],
+  plugins: ['prettier', '@typescript-eslint/eslint-plugin'],
   root: true,
   env: {
     node: true,
@@ -20,9 +20,9 @@ module.exports = {
   },
   ignorePatterns: ['dist/**/**', 'test/**'],
   rules: {
-    'no-unused-vars': 'error',
     'prettier/prettier': 'error',
     'class-methods-use-this': 'off',
+    'no-unused-vars': 'error',
     'no-console': 'off',
     'import/prefer-default-export': 'off',
     'import/no-default-export': 'error',
