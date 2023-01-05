@@ -54,7 +54,7 @@ export class AuthService {
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(signUpInput.password, salt);
 
-    return await this.userService.create({
+    return this.userService.create({
       username: signUpInput.username,
       displayName: signUpInput.username,
       email: signUpInput.email,
@@ -71,13 +71,12 @@ export class AuthService {
         access_token: this.makeJwtToken(existingUser),
         user: existingUser,
       };
-    } else {
-      const user = await this.userService.create(ssoUser);
-
-      return {
-        access_token: this.makeJwtToken(user),
-        user,
-      };
     }
+    const user = await this.userService.create(ssoUser);
+
+    return {
+      access_token: this.makeJwtToken(user),
+      user,
+    };
   }
 }

@@ -1,4 +1,5 @@
 {
+  "include": ["./.eslintrc.js", "src/**/*", "test/*"],
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
