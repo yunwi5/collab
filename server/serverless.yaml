@@ -17,8 +17,39 @@ provider:
   name: aws
   runtime: nodejs16.x
   region: ap-southeast-2
-  # environment: 
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - 'dynamodb:CreateTable'
+            - 'dynamodb:DescribeTable'
+            - 'dynamodb:Get*'
+            - 'dynamodb:List*'
+            - 'dynamodb:Query'
+            - 'dynamodb:Scan'
+            - 'dynamodb:PutItem'
+            - 'dynamodb:UpdateItem'
+            - 'dynamodb:DeleteItem'
+            - 'dynamodb:BatchGetItem'
+            - 'dynamodb:BatchWriteItem'
+          Resource: 'arn:aws:dynamodb:ap-southeast-2:765411096544:table/*'
 
+  environment:
+    APP_NAME: ${env:APP_NAME}
+    JWT_SECRET: ${env:JWT_SECRET}
+    GOOGLE_CLIENT_ID: ${env:GOOGLE_CLIENT_ID}
+    GOOGLE_CLIENT_SECRET: ${env:GOOGLE_CLIENT_SECRET}
+    GOOGLE_AUTH_CALLBACK: ${env:GOOGLE_AUTH_CALLBACK}
+    GITHUB_CLIENT_ID: ${env:GITHUB_CLIENT_ID}
+    GITHUB_CLIENT_SECRET: ${env:GITHUB_CLIENT_SECRET}
+    GITHUB_AUTH_CALLBACK: ${env:GITHUB_AUTH_CALLBACK}
+    USER_TABLE: ${env:USER_TABLE}
+    USER_TABLE_NAME_INDEX: ${env:USER_TABLE_NAME_INDEX}
+    QUIZ_TABLE_NAME: ${env:QUIZ_TABLE_NAME}
+    QUESTION_TABLE_NAME: ${env:QUESTION_TABLE_NAME}
+    ATTEMPT_HISTORY_TABLE_NAME: ${env:ATTEMPT_HISTORY_TABLE_NAME}
+    ATTEMPT_HISTORY_TABLE_USER_INDEX: ${env:ATTEMPT_HISTORY_TABLE_USER_INDEX}
 
 functions:
   main:
@@ -28,8 +59,7 @@ functions:
           method: ANY
           path: /
       - http:
-          path: graphql
+          path: '{proxy+}'
           method: ANY
-          cors: true
 
 # Deployed to URL: https://8kylmrl1lb.execute-api.ap-southeast-2.amazonaws.com/prod/

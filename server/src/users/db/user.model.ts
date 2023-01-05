@@ -38,4 +38,7 @@ export const userSchema = new dynamoose.Schema(
   },
 );
 
-export const UserModel = dynamoose.model<User>(dbTables.UserTable, userSchema);
+export const UserModel = dynamoose.model<User>(dbTables.UserTable, userSchema, {
+  create: false,
+  waitForActive: false,
+});

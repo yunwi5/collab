@@ -8,7 +8,6 @@ const userTable = `${appName}-${process.env.USER_TABLE}`;
 const userTableNameIndex = process.env.USER_TABLE_NAME_INDEX;
 
 export const envConfig = Object.freeze({
-  ServerURL: process.env.SERVER_URL,
   AwsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
   AwsAccessSecret: process.env.AWS_SECRET_ACCESS_KEY,
   AwsRegion: process.env.AWS_REGION,

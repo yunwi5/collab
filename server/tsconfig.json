@@ -11,6 +11,8 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
+    "allowJs": false,
+    "strict": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
     "noImplicitAny": false,

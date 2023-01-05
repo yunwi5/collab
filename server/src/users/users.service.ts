@@ -3,6 +3,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import crypto from 'crypto';
 
 import { dbTables } from 'src/config/env-config';
 import { SsoUserInput } from 'src/auth-sso/dto';
@@ -18,7 +19,7 @@ export class UsersService {
       const newUser = await UserModel.create({ userId, ...createUserInput });
       return newUser;
     } catch (err) {
-      console.log(err.message);
+      console.log((err as any).message);
       throw new InternalServerErrorException('could not create a user');
     }
   }
@@ -28,7 +29,7 @@ export class UsersService {
       const users = await UserModel.scan().exec();
       return users;
     } catch (err) {
-      console.log(err.message);
+      console.log((err as any).message);
       throw new InternalServerErrorException('could not fetch users');
     }
   }
@@ -43,7 +44,7 @@ export class UsersService {
       const user = users[0];
       return user;
     } catch (err) {
-      console.log(err.message);
+      console.log((err as any).message);
       throw new InternalServerErrorException('could not find user by name');
     }
   }
@@ -53,13 +54,13 @@ export class UsersService {
       const user = await UserModel.get(id);
       return user;
     } catch (err) {
-      console.log(err.message);
+      console.log((err as any).message);
       throw new InternalServerErrorException('could not find user by id');
     }
   }
 
   // provider sub
-  async fincBySub(sub: string): Promise<User> {
+  async findBySub(sub: string): Promise<User> {
     const users = await UserModel.scan('sub').eq(sub).exec();
     return users[0];
   }
@@ -70,7 +71,7 @@ export class UsersService {
       const updated = await UserModel.update({ userId: id }, updateInput);
       return updated;
     } catch (err) {
-      console.log(err.message);
+      console.log((err as any).message);
       throw new InternalServerErrorException('could not update user');
     }
   }
@@ -85,7 +86,7 @@ export class UsersService {
       await user.delete();
       return user;
     } catch (err) {
-      console.log(err.message);
+      console.log((err as any).message);
       throw new InternalServerErrorException('could not delete user by id');
     }
   }

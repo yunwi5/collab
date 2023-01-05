@@ -9,11 +9,15 @@ export class AppService {
       <body>
       <h1>Hello World from Nest!</h1>
       <div>
-        <a href="${envConfig.ServerURL}/auth/google">Google Login</a>
+        <p>${envConfig.GoogleAuthCallback}</p>
+        <p>${envConfig.GithubAuthCallback}</p>
+      </div>
+      <div>
+        <a href="auth/google">Google Login</a>
       </div>
       <br >
       <div>
-        <a href="${envConfig.ServerURL}/auth/github">Github Login</a>
+        <a href="auth/github">Github Login</a>
       </div>
       </body>
     </html>`;
