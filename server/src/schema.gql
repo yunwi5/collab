@@ -43,11 +43,11 @@ input SignUpInput {
 
 input UpdateUserInput {
   description: String
-  email: String
-  password: String
+  displayName: String
+  password: String!
   picture: String
   userId: String!
-  username: String
+  username: String!
 }
 
 type User {

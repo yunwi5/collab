@@ -24,7 +24,6 @@ module.exports = {
     'class-methods-use-this': 'off',
     'no-unused-vars': 'error',
     'no-console': 'off',
-    'spaced-comment': 'off',
     'import/prefer-default-export': 'off',
     'import/no-default-export': 'error',
     'import/no-extraneous-dependencies': [
