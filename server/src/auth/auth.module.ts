@@ -6,8 +6,7 @@ import { envConfig } from 'src/config/env-config';
 import { UsersModule } from 'src/users/users.module';
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
-import { LocalStrategy } from './strategy/local.strategy';
-import { JwtStrategy } from './strategy/jwt.strategy';
+import { LocalStrategy, JwtStrategy } from './strategy';
 
 @Module({
   imports: [
