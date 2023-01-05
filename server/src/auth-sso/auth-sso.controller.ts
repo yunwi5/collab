@@ -1,6 +1,6 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { GithubGuard, GoogleOauthGuard } from './guards';
 import { AuthService } from 'src/auth/auth.service';
+import { GithubGuard, GoogleOauthGuard } from './guards';
 
 @Controller('auth')
 export class AuthSsoController {
@@ -14,7 +14,7 @@ export class AuthSsoController {
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
   async googleAuthCallback(@Req() req) {
-    return await this.authService.ssoSignIn(req.user);
+    return this.authService.ssoSignIn(req.user);
   }
 
   @Get('github')
@@ -25,6 +25,6 @@ export class AuthSsoController {
   @UseGuards(GithubGuard)
   async githubAuthCallback(@Req() req) {
     // this endpoint will redirect the user to the Github login page
-    return await this.authService.ssoSignIn(req.user);
+    return this.authService.ssoSignIn(req.user);
   }
 }

@@ -4,6 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
 export class GqlAuthGuard extends AuthGuard('local') {
+  /* eslint-disable-next-line @typescript-eslint/no-useless-constructor */
   constructor() {
     super();
   }

@@ -5,12 +5,12 @@ import {
 } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 
+import { JwtAuthGuard } from 'src/auth/guards';
+import { JwtUser } from 'src/auth/auth.types';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { CreateUserInput, UpdateUserInput } from './dto';
-import { JwtAuthGuard } from 'src/auth/guards';
 import { CurrentUser } from './decorator';
-import { JwtUser } from 'src/auth/auth.types';
 
 @Resolver(() => User)
 export class UsersResolver {
