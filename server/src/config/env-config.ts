@@ -20,6 +20,7 @@ export const envConfig = Object.freeze({
   GithubAuthCallback: process.env.GITHUB_AUTH_CALLBACK,
   JwtSecret: process.env.JWT_SECRET || 'thisshouldbeasecret',
   AppName: appName,
+  Testing: process.env.TESTING === 'true',
 });
 
 export const dbTables = Object.freeze({
