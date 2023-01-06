@@ -6,8 +6,9 @@ import {
 } from '@nestjs/common';
 import crypto from 'crypto';
 
-import { getErrorMessage, isValidationError } from 'src/utils/error';
 import { Vote } from 'src/models';
+import { getErrorMessage, isValidationError } from 'src/utils/error';
+import { isSameName } from 'src/utils/string.util';
 import { CreateQuizInput } from './dto/create-quiz.input';
 import { UpdateQuizInput } from './dto/update-quiz.input';
 import { QuizModel } from './db/quiz.model';
@@ -20,12 +21,20 @@ export class QuizzesService {
     userId: string,
     createQuizInput: CreateQuizInput,
   ): Promise<Quiz> {
+    const quizInput = {
+      creatorId: userId,
+      quizId: crypto.randomUUID(),
+      ...createQuizInput,
+    };
+
+    const userQuizzes = await this.findAllByCreator(userId);
+    if (userQuizzes.some(quiz => isSameName(quiz.name, createQuizInput.name))) {
+      throw new BadRequestException(
+        'User already has the quiz of the same name.',
+      );
+    }
+
     try {
-      const quizInput = {
-        creatorId: userId,
-        quizId: crypto.randomUUID(),
-        ...createQuizInput,
-      };
       const quiz = await QuizModel.create(quizInput);
       return quiz;
     } catch (err) {
