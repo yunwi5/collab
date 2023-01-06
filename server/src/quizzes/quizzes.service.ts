@@ -9,7 +9,7 @@ import {
 import crypto from 'crypto';
 
 import { Vote } from 'src/models';
-import { getErrorMessage, isValidationError } from 'src/utils/error';
+import { getErrorMessage, isValidationError } from 'src/utils/error.util';
 import { isSameName } from 'src/utils/string.util';
 import { QuestionsService } from 'src/questions/questions.service';
 import { CreateQuestionBaseInput } from 'src/questions/dto';
