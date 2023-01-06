@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 input CreateQuestionInput {
-  correctOption: String!
+  correctOptions: [String!]!
   options: [String!]!
   prompt: String!
   quizId: ID!
@@ -58,7 +58,7 @@ type Query {
 }
 
 type Question {
-  correctOption: String!
+  correctOptions: [String!]!
   createdAt: Long!
   options: [String!]!
   prompt: String!
@@ -101,7 +101,7 @@ input SignUpInput {
 }
 
 input UpdateQuestionInput {
-  correctOption: String
+  correctOptions: [String!]
   options: [String!]
   prompt: String
   questionId: String!

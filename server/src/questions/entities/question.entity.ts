@@ -16,8 +16,8 @@ export class Question extends Item {
   @Field(() => [String])
   options: string[];
 
-  @Field()
-  correctOption: string;
+  @Field(() => [String])
+  correctOptions: string[];
 
   @Field(() => GraphQLLong)
   createdAt: number;

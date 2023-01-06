@@ -1,5 +1,5 @@
 import { InputType, Field, ID } from '@nestjs/graphql';
-import { ArrayMinSize, IsArray, IsString, MinLength } from 'class-validator';
+import { ArrayMinSize, IsArray, MinLength } from 'class-validator';
 
 @InputType()
 export class CreateQuestionInput {
@@ -15,7 +15,8 @@ export class CreateQuestionInput {
   @ArrayMinSize(2)
   options: string[];
 
-  @Field()
-  @IsString()
-  correctOption: string;
+  @Field(() => [String])
+  @IsArray()
+  @ArrayMinSize(1)
+  correctOptions: string[];
 }

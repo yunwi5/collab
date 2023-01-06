@@ -22,9 +22,11 @@ export const questionSchema = new dynamoose.Schema(
       schema: [String],
       default: [],
     },
-    correctOption: {
-      type: String,
+    correctOptions: {
+      type: Array,
+      schema: [String],
       required: true,
+      validate: value => Array.isArray(value) && value.length >= 1,
     },
   },
   {
