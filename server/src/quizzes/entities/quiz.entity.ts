@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
 import GraphQLLong from 'graphql-type-long';
 import { Item } from 'dynamoose/dist/Item';
 import { User } from 'src/users/entities';
@@ -29,6 +29,9 @@ export class Quiz extends Item {
 
   @Field()
   level: string;
+
+  @Field(() => Int)
+  passScore: number;
 
   @Field(() => [Vote])
   votes: Vote[];

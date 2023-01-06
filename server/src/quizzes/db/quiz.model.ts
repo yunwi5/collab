@@ -32,6 +32,10 @@ export const quizSchema = new dynamoose.Schema(
       type: String,
       enum: LevelEnumList,
     },
+    passScore: {
+      type: Number,
+      default: 70,
+    },
     votes: {
       type: Array,
       schema: [voteSchema],

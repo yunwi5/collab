@@ -1,5 +1,5 @@
-import { InputType, Field } from '@nestjs/graphql';
-import { Length } from 'class-validator';
+import { InputType, Field, Int } from '@nestjs/graphql';
+import { IsInt, Length, Max, Min } from 'class-validator';
 
 @InputType()
 export class CreateQuizInput {
@@ -15,4 +15,10 @@ export class CreateQuizInput {
 
   @Field()
   level: string;
+
+  @Field(() => Int, { defaultValue: 70 })
+  @IsInt()
+  @Min(50)
+  @Max(100)
+  passScore: number;
 }

@@ -12,6 +12,7 @@ input CreateQuestionInput {
 input CreateQuizInput {
   level: String!
   name: String!
+  passScore: Int! = 70
   tags: [String!]! = []
   topic: String!
 }
@@ -72,6 +73,7 @@ type Quiz {
   creatorId: ID!
   level: String!
   name: String!
+  passScore: Int!
 
   """ID of the quiz"""
   quizId: ID!
@@ -108,6 +110,7 @@ input UpdateQuestionInput {
 input UpdateQuizInput {
   level: String
   name: String
+  passScore: Int = 70
   quizId: String!
   tags: [String!] = []
   topic: String
