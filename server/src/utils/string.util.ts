@@ -4,3 +4,6 @@ const emailRegex =
 export const validateEmail = (email: string): boolean => {
   return emailRegex.test(email);
 };
+
+export const isSameName = (strA: string, strB: string) =>
+  strA.trim().toLowerCase() === strB.trim().toLocaleLowerCase();

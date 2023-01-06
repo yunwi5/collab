@@ -2,6 +2,22 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateQuestionInput {
+  correctOptions: [String!]!
+  options: [String!]!
+  point: Int! = 1
+  prompt: String!
+  quizId: ID!
+}
+
+input CreateQuizInput {
+  level: String!
+  name: String!
+  passScore: Int! = 70
+  tags: [String!]! = []
+  topic: String!
+}
+
 input CreateUserInput {
   email: String!
   password: String!
@@ -9,20 +25,65 @@ input CreateUserInput {
   username: String!
 }
 
+input CreateVoteInput {
+  creatorId: ID!
+  quizId: ID!
+  type: VoteType!
+}
+
 """The `Long` scalar type represents 52-bit integers"""
 scalar Long
 
 type Mutation {
+  createQuestion(createQuestionInput: CreateQuestionInput!): Question!
+  createQuiz(createQuizInput: CreateQuizInput!): Quiz!
   createUser(createUserInput: CreateUserInput!): User!
+  removeQuestion(questionId: String!, quizId: String!): Question!
+  removeQuiz(quizId: String!): Quiz!
   removeUser(id: String!): User!
   signIn(signInInput: SignInInput!): SignInResponse!
   signUp(signUpInput: SignUpInput!): User!
+  updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
+  updateQuiz(updateQuizInput: UpdateQuizInput!): Quiz!
   updateUser(updateUserInput: UpdateUserInput!): User!
+  voteQuiz(createVoteInput: CreateVoteInput!): Quiz!
 }
 
 type Query {
+  questionsByQuiz(quizId: String!): [Question!]!
+  quiz(creatorId: String!, quizId: String!): Quiz!
+  quizzes: [Quiz!]!
+  quizzesByCreator(creatorId: String!): [Quiz!]!
   user(id: String!): User!
   users: [User!]!
+}
+
+type Question {
+  correctOptions: [String!]!
+  createdAt: Long!
+  options: [String!]!
+  point: Int!
+  prompt: String!
+  questionId: ID!
+  quizId: ID!
+  updatedAt: Long!
+}
+
+type Quiz {
+  createdAt: Long!
+  creator: User!
+  creatorId: ID!
+  level: String!
+  name: String!
+  passScore: Int!
+  questions: [Question!]!
+
+  """ID of the quiz"""
+  quizId: ID!
+  tags: [String!]!
+  topic: String!
+  updatedAt: Long!
+  votes: [Vote!]!
 }
 
 input SignInInput {
@@ -41,13 +102,31 @@ input SignUpInput {
   username: String!
 }
 
+input UpdateQuestionInput {
+  correctOptions: [String!]
+  options: [String!]
+  point: Int = 1
+  prompt: String
+  questionId: String!
+  quizId: ID
+}
+
+input UpdateQuizInput {
+  level: String
+  name: String
+  passScore: Int = 70
+  quizId: String!
+  tags: [String!] = []
+  topic: String
+}
+
 input UpdateUserInput {
   description: String
   displayName: String
-  password: String!
+  password: String
   picture: String
   userId: String!
-  username: String!
+  username: String
 }
 
 type User {
@@ -63,4 +142,17 @@ type User {
   """ID of the user"""
   userId: String!
   username: String!
+}
+
+type Vote {
+  """Vote type"""
+  type: String!
+
+  """ID of the user"""
+  userId: ID!
+}
+
+enum VoteType {
+  DOWN
+  UP
 }

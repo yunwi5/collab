@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import crypto from 'crypto';
 
-import { dbTables } from 'src/config/env-config';
+import { dbTables } from 'src/config/env.config';
 import { SsoUserInput } from 'src/auth-sso/dto';
 import { CreateUserInput, UpdateUserInput } from './dto';
 import { User } from './entities/user.entity';
