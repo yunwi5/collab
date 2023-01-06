@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import crypto from 'crypto';
 
-import { getErrorMessage, isValidationError } from 'src/utils/error';
+import { getErrorMessage, isValidationError } from 'src/utils/error.util';
 import { QuizzesService } from 'src/quizzes/quizzes.service';
 import { Question } from './entities';
 import { QuestionModel } from './db/question.model';
