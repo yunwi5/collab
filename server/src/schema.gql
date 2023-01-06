@@ -8,6 +8,7 @@ input CreateQuestionInput {
   point: Int! = 1
   prompt: String!
   quizId: ID!
+  timeLimit: Int! = 60
 }
 
 input CreateQuizInput {
@@ -66,6 +67,7 @@ type Question {
   prompt: String!
   questionId: ID!
   quizId: ID!
+  timeLimit: Int!
   updatedAt: Long!
 }
 
@@ -109,6 +111,7 @@ input UpdateQuestionInput {
   prompt: String
   questionId: String!
   quizId: ID
+  timeLimit: Int = 60
 }
 
 input UpdateQuizInput {

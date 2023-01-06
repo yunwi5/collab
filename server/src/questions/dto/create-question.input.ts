@@ -24,4 +24,9 @@ export class CreateQuestionInput {
   @IsInt()
   @Min(1)
   point: number;
+
+  @Field(() => Int, { defaultValue: 60 })
+  @IsInt()
+  @Min(5)
+  timeLimit: number; // in seconds
 }

@@ -27,4 +27,7 @@ export class Question extends Item {
 
   @Field(() => Int, { defaultValue: 1 })
   point: number;
+
+  @Field(() => Int, { defaultValue: 60 })
+  timeLimit: number; // in seconds
 }

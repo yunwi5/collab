@@ -29,6 +29,10 @@ export const questionSchema = new dynamoose.Schema(
       validate: value => Array.isArray(value) && value.length >= 1,
     },
     point: Number,
+    timeLimit: {
+      type: Number,
+      default: 60,
+    },
   },
   {
     timestamps: true,
