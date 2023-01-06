@@ -1,14 +1,18 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 import crypto from 'crypto';
 
 import { Vote } from 'src/models';
 import { getErrorMessage, isValidationError } from 'src/utils/error';
 import { isSameName } from 'src/utils/string.util';
+import { QuestionsService } from 'src/questions/questions.service';
+import { CreateQuestionBaseInput } from 'src/questions/dto';
 import { CreateQuizInput } from './dto/create-quiz.input';
 import { UpdateQuizInput } from './dto/update-quiz.input';
 import { QuizModel } from './db/quiz.model';
@@ -17,14 +21,28 @@ import { CreateVoteInput } from './dto/create-vote.input';
 
 @Injectable()
 export class QuizzesService {
+  constructor(
+    @Inject(forwardRef(() => QuestionsService))
+    private readonly questionsService: QuestionsService,
+  ) {}
+
+  assignQuizIdToQuestions(
+    quizId: string,
+    questions: CreateQuestionBaseInput[],
+  ) {
+    return questions.map(q => ({ ...q, quizId }));
+  }
+
   async create(
     userId: string,
     createQuizInput: CreateQuizInput,
   ): Promise<Quiz> {
+    const { questions = [], ...quizProps } = createQuizInput;
+
     const quizInput = {
       creatorId: userId,
       quizId: crypto.randomUUID(),
-      ...createQuizInput,
+      ...quizProps,
     };
 
     const userQuizzes = await this.findAllByCreator(userId);
@@ -36,6 +54,11 @@ export class QuizzesService {
 
     try {
       const quiz = await QuizModel.create(quizInput);
+      await this.questionsService.batchCreate(
+        userId,
+        this.assignQuizIdToQuestions(quiz.quizId, questions),
+      );
+
       return quiz;
     } catch (err) {
       if (err instanceof Error && isValidationError(err)) {
@@ -80,7 +103,7 @@ export class QuizzesService {
     userId: string,
     updateQuizInput: UpdateQuizInput,
   ): Promise<Quiz> {
-    const { quizId, ...updateQuizProps } = updateQuizInput;
+    const { quizId, questions = [], ...updateQuizProps } = updateQuizInput;
     const quiz = await this.findByCreatorAndQuizId(
       userId,
       updateQuizInput.quizId,
@@ -88,10 +111,13 @@ export class QuizzesService {
     if (quiz == null) throw new NotFoundException('Quiz not found');
 
     try {
-      const updatedQuiz = await QuizModel.update(
-        { creatorId: userId, quizId },
-        updateQuizProps,
-      );
+      const [updatedQuiz] = await Promise.all([
+        QuizModel.update({ creatorId: userId, quizId }, updateQuizProps),
+        this.questionsService.batchCreate(
+          userId,
+          this.assignQuizIdToQuestions(quiz.quizId, questions),
+        ),
+      ]);
 
       return updatedQuiz;
     } catch (err) {

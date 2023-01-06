@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -7,13 +8,32 @@ import {
 import crypto from 'crypto';
 
 import { getErrorMessage, isValidationError } from 'src/utils/error';
+import { QuizzesService } from 'src/quizzes/quizzes.service';
 import { Question } from './entities';
 import { QuestionModel } from './db/question.model';
 import { CreateQuestionInput, UpdateQuestionInput } from './dto';
 
 @Injectable()
 export class QuestionsService {
-  async create(createQuestionInput: CreateQuestionInput): Promise<Question> {
+  constructor(private readonly quizzesService: QuizzesService) {}
+
+  async isQuizCreator(userId: string, quizId: string) {
+    const foundQuiz = await this.quizzesService.findByCreatorAndQuizId(
+      userId,
+      quizId,
+    );
+    return foundQuiz != null;
+  }
+
+  async create(
+    userId: string,
+    createQuestionInput: CreateQuestionInput,
+  ): Promise<Question> {
+    if (!(await this.isQuizCreator(userId, createQuestionInput.quizId)))
+      throw new ForbiddenException(
+        'Only the quiz creator can create the quiz question!',
+      );
+
     const questionInput = {
       questionId: crypto.randomUUID(),
       ...createQuestionInput,
@@ -25,6 +45,39 @@ export class QuestionsService {
     } catch (err) {
       if (err instanceof Error && isValidationError(err)) {
         throw new BadRequestException('Question input invalid.');
+      }
+      throw new InternalServerErrorException(getErrorMessage(err));
+    }
+  }
+
+  async batchCreate(
+    userId: string,
+    createQuestionInputs: CreateQuestionInput[],
+  ): Promise<Question[]> {
+    if (createQuestionInputs.length === 0) return [];
+
+    const { quizId } = createQuestionInputs[0];
+    if (!(await this.isQuizCreator(userId, quizId)))
+      throw new ForbiddenException(
+        'Only the quiz creator can create the quiz question!',
+      );
+
+    const newQuestions = createQuestionInputs.map(qInput => ({
+      questionId: crypto.randomUUID(),
+      ...qInput,
+    }));
+
+    try {
+      const result = await QuestionModel.batchPut(newQuestions);
+      if (result.unprocessedItems.length > 0)
+        console.warn(
+          `${result.unprocessedItems.length} question items were unprocessed`,
+        );
+
+      return await this.findAllByQuizId(quizId);
+    } catch (err) {
+      if (err instanceof Error && isValidationError(err)) {
+        throw new BadRequestException('Question inputs invalid.');
       }
       throw new InternalServerErrorException(getErrorMessage(err));
     }
@@ -44,7 +97,15 @@ export class QuestionsService {
     return question;
   }
 
-  async update(updateQuestionInput: UpdateQuestionInput): Promise<Question> {
+  async update(
+    userId: string,
+    updateQuestionInput: UpdateQuestionInput,
+  ): Promise<Question> {
+    if (!(await this.isQuizCreator(userId, updateQuestionInput.quizId)))
+      throw new ForbiddenException(
+        'Only the quiz creator can update the quiz question!',
+      );
+
     const { quizId, questionId, ...updateQuestionProps } = updateQuestionInput;
 
     const question = await this.findByQuizAndQuestionId(quizId, questionId);
@@ -56,6 +117,7 @@ export class QuestionsService {
         { quizId, questionId },
         updateQuestionProps,
       );
+
       return updatedQuestion;
     } catch (err) {
       if (err instanceof Error && isValidationError(err)) {
@@ -65,7 +127,16 @@ export class QuestionsService {
     }
   }
 
-  async remove(quizId: string, questionId: string): Promise<Question> {
+  async remove(
+    userId: string,
+    quizId: string,
+    questionId: string,
+  ): Promise<Question> {
+    if (!(await this.isQuizCreator(userId, quizId)))
+      throw new ForbiddenException(
+        'Only the quiz creator can update the quiz question!',
+      );
+
     const question = await QuestionModel.get({ quizId, questionId });
     if (question == null)
       throw new NotFoundException('Quiz question not found.');

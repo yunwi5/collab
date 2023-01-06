@@ -7,5 +7,6 @@ import { QuizzesResolver } from './quizzes.resolver';
 @Module({
   imports: [UsersModule, QuestionsModule],
   providers: [QuizzesResolver, QuizzesService],
+  exports: [QuizzesService],
 })
 export class QuizzesModule {}
