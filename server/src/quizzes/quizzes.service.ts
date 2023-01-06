@@ -81,7 +81,6 @@ export class QuizzesService {
     updateQuizInput: UpdateQuizInput,
   ): Promise<Quiz> {
     const { quizId, ...updateQuizProps } = updateQuizInput;
-    console.log({ updateQuizProps });
     const quiz = await this.findByCreatorAndQuizId(
       userId,
       updateQuizInput.quizId,

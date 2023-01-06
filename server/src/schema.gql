@@ -2,6 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateQuestionInput {
+  correctOption: String!
+  options: [String!]!
+  prompt: String!
+  quizId: ID!
+}
+
 input CreateQuizInput {
   level: String!
   name: String!
@@ -26,23 +33,37 @@ input CreateVoteInput {
 scalar Long
 
 type Mutation {
+  createQuestion(createQuestionInput: CreateQuestionInput!): Question!
   createQuiz(createQuizInput: CreateQuizInput!): Quiz!
   createUser(createUserInput: CreateUserInput!): User!
+  removeQuestion(questionId: String!, quizId: String!): Question!
   removeQuiz(quizId: String!): Quiz!
   removeUser(id: String!): User!
   signIn(signInInput: SignInInput!): SignInResponse!
   signUp(signUpInput: SignUpInput!): User!
+  updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
   updateQuiz(updateQuizInput: UpdateQuizInput!): Quiz!
   updateUser(updateUserInput: UpdateUserInput!): User!
   voteQuiz(createVoteInput: CreateVoteInput!): Quiz!
 }
 
 type Query {
+  questionsByQuiz(quizId: String!): [Question!]!
   quiz(creatorId: String!, quizId: String!): Quiz!
   quizzes: [Quiz!]!
   quizzesByCreator(creatorId: String!): [Quiz!]!
   user(id: String!): User!
   users: [User!]!
+}
+
+type Question {
+  correctOption: String!
+  createdAt: Long!
+  options: [String!]!
+  prompt: String!
+  questionId: ID!
+  quizId: ID!
+  updatedAt: Long!
 }
 
 type Quiz {
@@ -74,6 +95,14 @@ input SignUpInput {
   email: String!
   password: String!
   username: String!
+}
+
+input UpdateQuestionInput {
+  correctOption: String
+  options: [String!]
+  prompt: String
+  questionId: String!
+  quizId: ID
 }
 
 input UpdateQuizInput {
