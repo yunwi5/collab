@@ -3,6 +3,7 @@ import GraphQLLong from 'graphql-type-long';
 import { Item } from 'dynamoose/dist/Item';
 import { User } from 'src/users/entities';
 import { Vote } from 'src/models';
+import { Question } from 'src/questions/entities';
 
 @ObjectType()
 export class Quiz extends Item {
@@ -37,5 +38,8 @@ export class Quiz extends Item {
   votes: Vote[];
 
   @Field(() => User)
-  creator?: User; // resolve field
+  creator: User; // resolve field
+
+  @Field(() => [Question])
+  questions: Question[]; // resolve field
 }

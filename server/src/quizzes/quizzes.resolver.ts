@@ -13,6 +13,8 @@ import { CurrentUser } from 'src/users/decorator';
 import { JwtUser } from 'src/auth/auth.types';
 import { User } from 'src/users/entities';
 import { UsersService } from 'src/users/users.service';
+import { Question } from 'src/questions/entities';
+import { QuestionsService } from 'src/questions/questions.service';
 import { QuizzesService } from './quizzes.service';
 import { Quiz } from './entities/quiz.entity';
 import { CreateQuizInput } from './dto/create-quiz.input';
@@ -23,6 +25,7 @@ import { CreateVoteInput } from './dto/create-vote.input';
 export class QuizzesResolver {
   constructor(
     private readonly quizzesService: QuizzesService,
+    private readonly questionsService: QuestionsService,
     private readonly usersService: UsersService,
   ) {}
 
@@ -77,6 +80,11 @@ export class QuizzesResolver {
   @ResolveField(() => User, { name: 'creator' })
   findCreator(@Parent() quiz: Quiz): Promise<User> {
     return this.usersService.findById(quiz.creatorId);
+  }
+
+  @ResolveField(() => [Question], { name: 'questions' })
+  findQuestions(@Parent() quiz: Quiz): Promise<Question[]> {
+    return this.questionsService.findAllByQuizId(quiz.quizId);
   }
 
   @Mutation(() => Quiz)
