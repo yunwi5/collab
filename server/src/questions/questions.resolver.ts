@@ -1,6 +1,8 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards';
+import { CurrentUser } from 'src/users/decorator';
+import { JwtUser } from 'src/auth/auth.types';
 import { QuestionsService } from './questions.service';
 import { Question } from './entities';
 import { CreateQuestionInput, UpdateQuestionInput } from './dto';
@@ -12,9 +14,10 @@ export class QuestionsResolver {
   @Mutation(() => Question)
   @UseGuards(JwtAuthGuard)
   createQuestion(
+    @CurrentUser() user: JwtUser,
     @Args('createQuestionInput') createQuestionInput: CreateQuestionInput,
   ) {
-    return this.questionsService.create(createQuestionInput);
+    return this.questionsService.create(user.userId, createQuestionInput);
   }
 
   @Query(() => [Question], { name: 'questionsByQuiz' })
@@ -25,17 +28,19 @@ export class QuestionsResolver {
   @Mutation(() => Question)
   @UseGuards(JwtAuthGuard)
   updateQuestion(
+    @CurrentUser() user: JwtUser,
     @Args('updateQuestionInput') updateQuestionInput: UpdateQuestionInput,
   ) {
-    return this.questionsService.update(updateQuestionInput);
+    return this.questionsService.update(user.userId, updateQuestionInput);
   }
 
   @Mutation(() => Question)
   @UseGuards(JwtAuthGuard)
   removeQuestion(
+    @CurrentUser() user: JwtUser,
     @Args('quizId') quizId: string,
     @Args('questionId') questionId: string,
   ) {
-    return this.questionsService.remove(quizId, questionId);
+    return this.questionsService.remove(user.userId, quizId, questionId);
   }
 }
