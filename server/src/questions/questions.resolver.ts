@@ -1,5 +1,5 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { UseGuards } from '@nestjs/common';
+import { BadRequestException, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { CurrentUser } from 'src/users/decorator';
 import { JwtUser } from 'src/auth/auth.types';
@@ -18,6 +18,20 @@ export class QuestionsResolver {
     @Args('createQuestionInput') createQuestionInput: CreateQuestionInput,
   ) {
     return this.questionsService.create(user.userId, createQuestionInput);
+  }
+
+  @Mutation(() => [Question])
+  @UseGuards(JwtAuthGuard)
+  createQuestions(
+    @CurrentUser() user: JwtUser,
+    @Args('createQuestionInputs', { type: () => [CreateQuestionInput] })
+    createQuestionInputs: CreateQuestionInput[],
+  ) {
+    if (createQuestionInputs.length === 0)
+      throw new BadRequestException(
+        'Please send at least one questions to create',
+      );
+    return this.questionsService.batchCreate(user.userId, createQuestionInputs);
   }
 
   @Query(() => [Question], { name: 'questionsByQuiz' })

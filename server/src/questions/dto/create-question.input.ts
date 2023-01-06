@@ -1,32 +1,8 @@
-import { InputType, Field, ID, Int } from '@nestjs/graphql';
-import { ArrayMinSize, IsArray, IsInt, Min, MinLength } from 'class-validator';
+import { InputType, Field, ID } from '@nestjs/graphql';
+import { CreateQuestionBaseInput } from './create-question-base.input';
 
 @InputType()
-export class CreateQuestionInput {
+export class CreateQuestionInput extends CreateQuestionBaseInput {
   @Field(() => ID)
   quizId: string;
-
-  @Field()
-  @MinLength(5)
-  prompt: string;
-
-  @Field(() => [String])
-  @IsArray()
-  @ArrayMinSize(2)
-  options: string[];
-
-  @Field(() => [String])
-  @IsArray()
-  @ArrayMinSize(1)
-  correctOptions: string[];
-
-  @Field(() => Int, { defaultValue: 1 })
-  @IsInt()
-  @Min(1)
-  point: number;
-
-  @Field(() => Int, { defaultValue: 60 })
-  @IsInt()
-  @Min(5)
-  timeLimit: number; // in seconds
 }

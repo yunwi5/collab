@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateQuestionBaseInput {
+  correctOptions: [String!]!
+  options: [String!]!
+  point: Int! = 1
+  prompt: String!
+  timeLimit: Int! = 60
+}
+
 input CreateQuestionInput {
   correctOptions: [String!]!
   options: [String!]!
@@ -15,6 +23,7 @@ input CreateQuizInput {
   level: String!
   name: String!
   passScore: Int! = 70
+  questions: [CreateQuestionBaseInput!]
   tags: [String!]! = []
   topic: String!
 }
@@ -37,6 +46,7 @@ scalar Long
 
 type Mutation {
   createQuestion(createQuestionInput: CreateQuestionInput!): Question!
+  createQuestions(createQuestionInputs: [CreateQuestionInput!]!): [Question!]!
   createQuiz(createQuizInput: CreateQuizInput!): Quiz!
   createUser(createUserInput: CreateUserInput!): User!
   removeQuestion(questionId: String!, quizId: String!): Question!
@@ -118,6 +128,7 @@ input UpdateQuizInput {
   level: String
   name: String
   passScore: Int = 70
+  questions: [CreateQuestionBaseInput!]
   quizId: String!
   tags: [String!] = []
   topic: String

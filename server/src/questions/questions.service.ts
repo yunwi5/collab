@@ -50,6 +50,39 @@ export class QuestionsService {
     }
   }
 
+  async batchCreate(
+    userId: string,
+    createQuestionInputs: CreateQuestionInput[],
+  ): Promise<Question[]> {
+    if (createQuestionInputs.length === 0) return [];
+
+    const { quizId } = createQuestionInputs[0];
+    if (!(await this.isQuizCreator(userId, quizId)))
+      throw new ForbiddenException(
+        'Only the quiz creator can create the quiz question!',
+      );
+
+    const newQuestions = createQuestionInputs.map(qInput => ({
+      questionId: crypto.randomUUID(),
+      ...qInput,
+    }));
+
+    try {
+      const result = await QuestionModel.batchPut(newQuestions);
+      if (result.unprocessedItems.length > 0)
+        console.warn(
+          `${result.unprocessedItems.length} question items were unprocessed`,
+        );
+
+      return await this.findAllByQuizId(quizId);
+    } catch (err) {
+      if (err instanceof Error && isValidationError(err)) {
+        throw new BadRequestException('Question inputs invalid.');
+      }
+      throw new InternalServerErrorException(getErrorMessage(err));
+    }
+  }
+
   async findAllByQuizId(quizId: string): Promise<Question[]> {
     try {
       const questions = await QuestionModel.query({ quizId }).exec();
@@ -84,6 +117,7 @@ export class QuestionsService {
         { quizId, questionId },
         updateQuestionProps,
       );
+
       return updatedQuestion;
     } catch (err) {
       if (err instanceof Error && isValidationError(err)) {
