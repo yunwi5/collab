@@ -5,6 +5,7 @@
 input CreateQuestionInput {
   correctOptions: [String!]!
   options: [String!]!
+  point: Int! = 1
   prompt: String!
   quizId: ID!
 }
@@ -61,6 +62,7 @@ type Question {
   correctOptions: [String!]!
   createdAt: Long!
   options: [String!]!
+  point: Int!
   prompt: String!
   questionId: ID!
   quizId: ID!
@@ -103,6 +105,7 @@ input SignUpInput {
 input UpdateQuestionInput {
   correctOptions: [String!]
   options: [String!]
+  point: Int = 1
   prompt: String
   questionId: String!
   quizId: ID

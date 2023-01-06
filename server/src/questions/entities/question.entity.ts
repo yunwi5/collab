@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
 import GraphQLLong from 'graphql-type-long';
 import { Item } from 'dynamoose/dist/Item';
 
@@ -24,4 +24,7 @@ export class Question extends Item {
 
   @Field(() => GraphQLLong)
   updatedAt: number;
+
+  @Field(() => Int, { defaultValue: 1 })
+  point: number;
 }
