@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.config.js"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.245.0",
     "@nestjs/apollo": "^10.1.7",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",

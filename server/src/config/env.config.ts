@@ -7,6 +7,9 @@ const appName = process.env.APP_NAME || 'Collab';
 const userTable = `${appName}-${process.env.USER_TABLE}`;
 const userTableNameIndex = process.env.USER_TABLE_NAME_INDEX;
 
+const quizTable = `${appName}-${process.env.QUIZ_TABLE}`;
+const questionTable = `${appName}-${process.env.QUESTION_TABLE}`;
+
 export const envConfig = Object.freeze({
   AwsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
   AwsAccessSecret: process.env.AWS_SECRET_ACCESS_KEY,
@@ -26,4 +29,8 @@ export const envConfig = Object.freeze({
 export const dbTables = Object.freeze({
   UserTable: userTable,
   UserTableNameIndex: userTableNameIndex,
+  QuizTable: quizTable,
+  QuestionTable: questionTable,
 });
+
+console.log(dbTables);

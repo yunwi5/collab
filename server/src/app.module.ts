@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import { isProduction } from './utils';
 import { configureDynamoDB } from './config/db';
 import { AuthSsoModule } from './auth-sso/auth-sso.module';
+import { QuizzesModule } from './quizzes/quizzes.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AuthSsoModule } from './auth-sso/auth-sso.module';
     AuthModule,
     UsersModule,
     AuthSsoModule,
+    QuizzesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

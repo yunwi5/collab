@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth2';
-import { envConfig } from 'src/config/env-config';
+import { envConfig } from 'src/config/env.config';
 import { SsoUserInput } from '../dto';
 import { AuthProvider } from '../auth-sso.enum';
 

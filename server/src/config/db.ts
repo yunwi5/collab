@@ -1,5 +1,5 @@
 import * as dynamoose from 'dynamoose';
-import { envConfig } from './env-config';
+import { envConfig } from './env.config';
 
 export const configureDynamoDB = () => {
   if (envConfig.Testing) {
