@@ -40,6 +40,11 @@ export class QuizzesResolver {
     return this.quizzesService.findAll();
   }
 
+  @Query(() => [Quiz], { name: 'quizzesByCreator' })
+  findAllByCreator(@Args('creatorId') creatorId: string) {
+    return this.quizzesService.findAllByCreator(creatorId);
+  }
+
   @Query(() => Quiz, { name: 'quiz' })
   @UseGuards(JwtAuthGuard)
   async findOne(

@@ -29,12 +29,20 @@ export class QuizzesService {
       const quiz = await QuizModel.create(quizInput);
       return quiz;
     } catch (err) {
-      const message = getErrorMessage(err);
       if (err instanceof Error && isValidationError(err)) {
         throw new BadRequestException('Quiz input is not acceptable');
       }
 
-      throw new InternalServerErrorException(message);
+      throw new InternalServerErrorException(getErrorMessage(err));
+    }
+  }
+
+  async findAllByCreator(creatorId: string): Promise<Quiz[]> {
+    try {
+      const quizzes = await QuizModel.query({ creatorId }).exec();
+      return quizzes;
+    } catch (err) {
+      throw new InternalServerErrorException(getErrorMessage(err));
     }
   }
 
@@ -43,8 +51,7 @@ export class QuizzesService {
       const quizzes = await QuizModel.scan().exec();
       return quizzes;
     } catch (err) {
-      const message = getErrorMessage(err);
-      throw new InternalServerErrorException(message);
+      throw new InternalServerErrorException(getErrorMessage(err));
     }
   }
 
