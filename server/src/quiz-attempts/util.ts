@@ -1,10 +1,7 @@
 import { Question } from 'src/questions/entities';
+import { arraysEqual } from 'src/utils/array.util';
 import { QuestionAttemptInput } from './dto';
 import { QuestionAttempt } from './entities';
-
-function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
-  return JSON.stringify(arr1.sort()) === JSON.stringify(arr2.sort());
-}
 
 export const getTotalQuizScore = (questions: Question[]): number => {
   return questions.reduce((total, question) => total + question.point, 0);
