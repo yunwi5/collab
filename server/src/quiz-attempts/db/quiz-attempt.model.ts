@@ -8,9 +8,18 @@ const questionAttemptSchema = new dynamoose.Schema({
   selectedOptions: {
     type: Array,
     schema: [String],
-    required: true,
-    default: [],
   },
+  prompt: String,
+  options: {
+    type: Array,
+    schema: [String],
+  },
+  correctOptions: {
+    type: Array,
+    schema: [String],
+  },
+  point: Number,
+  createdAt: Number,
 });
 
 export const quizAttemptSchema = new dynamoose.Schema({

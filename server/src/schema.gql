@@ -86,6 +86,11 @@ type Question {
 }
 
 type QuestionAttempt {
+  correctOptions: [String!]!
+  createdAt: Long!
+  options: [String!]!
+  point: Int!
+  prompt: String!
   questionId: ID!
   selectedOptions: [String!]!
 }

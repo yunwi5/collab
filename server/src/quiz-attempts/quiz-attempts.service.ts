@@ -9,7 +9,11 @@ import { QuestionsService } from 'src/questions/questions.service';
 import { getErrorMessage, isValidationError } from 'src/utils/error.util';
 import { dbTables } from 'src/config/env.config';
 import { QuizAttemptInput } from './dto';
-import { getQuizScore, getTotalQuizScore } from './util';
+import {
+  getQuizScore,
+  getTotalQuizScore,
+  getUserAnswersWithQuestionInfo,
+} from './util';
 import { QuizAttempt } from './entities';
 import { QuizAttemptModel } from './db/quiz-attempt.model';
 
@@ -52,7 +56,7 @@ export class QuizAttemptsService {
       score: userQuizScore,
       scorePercentage: userScorePercentage,
       pass: hasPassed,
-      answers: userAnswers,
+      answers: getUserAnswersWithQuestionInfo(questions, userAnswers),
     };
 
     try {
