@@ -22,7 +22,7 @@ input CreateQuestionInput {
 input CreateQuizInput {
   level: String!
   name: String!
-  passScore: Int! = 70
+  passScore: Float! = 70
   questions: [CreateQuestionBaseInput!]
   tags: [String!]! = []
   topic: String!
@@ -165,7 +165,7 @@ input UpdateQuestionInput {
 input UpdateQuizInput {
   level: String
   name: String
-  passScore: Int = 70
+  passScore: Float = 70
   questions: [CreateQuestionBaseInput!]
   quizId: String!
   tags: [String!] = []
