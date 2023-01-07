@@ -32,16 +32,14 @@ export class S3Controller {
       await this.s3Service.deleteLocalUpload(file.path);
       return { srcKey: result.Key, url: result.Location };
     } catch (err) {
-      console.log(getErrorMessage(err));
-      throw new InternalServerErrorException('Something went wrong...');
+      throw new InternalServerErrorException(getErrorMessage(err));
     }
   }
 
   @Get(':key')
   findOne(@Param('key') key: string, @Res() res: Response) {
-    const readStream = this.s3Service.findOne(key);
-    readStream.on('error', error => {
-      console.log(error.message);
+    const readStream = this.s3Service.findAsReadStream(key);
+    readStream.on('error', () => {
       return res.status(200).send('Image unavailable');
     });
 

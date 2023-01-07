@@ -35,7 +35,7 @@ export class S3Service {
     return this.s3.upload(params).promise();
   }
 
-  findOne(fileKey: string) {
+  findAsReadStream(fileKey: string) {
     const downloadParams = {
       Key: fileKey,
       Bucket: envConfig.ImageBucketName,
