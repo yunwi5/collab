@@ -22,7 +22,7 @@ input CreateQuestionInput {
 input CreateQuizInput {
   level: String!
   name: String!
-  passScore: Int! = 70
+  passScore: Float! = 70
   questions: [CreateQuestionBaseInput!]
   tags: [String!]! = []
   topic: String!
@@ -54,6 +54,7 @@ type Mutation {
   removeUser(id: String!): User!
   signIn(signInInput: SignInInput!): SignInResponse!
   signUp(signUpInput: SignUpInput!): User!
+  submitQuizAttempt(quizAttemptInput: QuizAttemptInput!): QuizAttempt!
   updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
   updateQuiz(updateQuizInput: UpdateQuizInput!): Quiz!
   updateUser(updateUserInput: UpdateUserInput!): User!
@@ -63,6 +64,9 @@ type Mutation {
 type Query {
   questionsByQuiz(quizId: String!): [Question!]!
   quiz(creatorId: String!, quizId: String!): Quiz!
+  quizAttempt(quizId: String!, userId: String!): QuizAttempt!
+  quizAttemptsByQuiz(quizId: String!): [QuizAttempt!]!
+  quizAttemptsByUser(userId: String!): [QuizAttempt!]!
   quizzes: [Quiz!]!
   quizzesByCreator(creatorId: String!): [Quiz!]!
   user(id: String!): User!
@@ -81,6 +85,21 @@ type Question {
   updatedAt: Long!
 }
 
+type QuestionAttempt {
+  correctOptions: [String!]!
+  createdAt: Long!
+  options: [String!]!
+  point: Int!
+  prompt: String!
+  questionId: ID!
+  selectedOptions: [String!]!
+}
+
+input QuestionAttemptInput {
+  questionId: ID!
+  selectedOptions: [String!]!
+}
+
 type Quiz {
   createdAt: Long!
   creator: User!
@@ -96,6 +115,25 @@ type Quiz {
   topic: String!
   updatedAt: Long!
   votes: [Vote!]!
+}
+
+type QuizAttempt {
+  answers: [QuestionAttempt!]!
+  creatorId: ID!
+  pass: Boolean!
+  quiz: Quiz!
+  quizId: ID!
+  score: Int!
+  scorePercentage: Float!
+  timestamp: Long!
+  user: User!
+  userId: ID!
+}
+
+input QuizAttemptInput {
+  answers: [QuestionAttemptInput!]!
+  creatorId: ID!
+  quizId: ID!
 }
 
 input SignInInput {
@@ -127,7 +165,7 @@ input UpdateQuestionInput {
 input UpdateQuizInput {
   level: String
   name: String
-  passScore: Int = 70
+  passScore: Float = 70
   questions: [CreateQuestionBaseInput!]
   quizId: String!
   tags: [String!] = []

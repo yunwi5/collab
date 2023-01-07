@@ -5,7 +5,7 @@ resource "aws_dynamodb_table" "attempt_history_table" {
   read_capacity  = 5
   write_capacity = 5
   hash_key       = "quizId"
-  range_key      = "timestamp"
+  range_key      = "userId"
 
   attribute {
     name = "quizId"
@@ -14,7 +14,7 @@ resource "aws_dynamodb_table" "attempt_history_table" {
 
   attribute {
     name = "timestamp"
-    type = "S"
+    type = "N"
   }
 
   attribute {

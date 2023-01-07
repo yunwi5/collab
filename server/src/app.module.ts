@@ -12,6 +12,7 @@ import { configureDynamoDB } from './config/db';
 import { AuthSsoModule } from './auth-sso/auth-sso.module';
 import { QuizzesModule } from './quizzes/quizzes.module';
 import { QuestionsModule } from './questions/questions.module';
+import { QuizAttemptsModule } from './quiz-attempts/quiz-attempts.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { QuestionsModule } from './questions/questions.module';
     AuthSsoModule,
     QuizzesModule,
     QuestionsModule,
+    QuizAttemptsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
