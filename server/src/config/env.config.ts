@@ -27,6 +27,7 @@ export const envConfig = Object.freeze({
   JwtSecret: process.env.JWT_SECRET || 'thisshouldbeasecret',
   AppName: appName,
   Testing: process.env.TESTING === 'true',
+  ImageBucketName: process.env.IMAGE_S3_BUCKET,
 });
 
 export const dbTables = Object.freeze({
@@ -38,4 +39,4 @@ export const dbTables = Object.freeze({
   QuizAttemptUserIndex: quizAttemptUserIndex,
 });
 
-console.log(dbTables);
+console.log(envConfig);
