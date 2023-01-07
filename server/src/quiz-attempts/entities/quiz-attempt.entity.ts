@@ -2,6 +2,7 @@ import { ObjectType, Field, ID, Int, Float } from '@nestjs/graphql';
 import GraphQLLong from 'graphql-type-long';
 import { Item } from 'dynamoose/dist/Item';
 
+import { User } from 'src/users/entities';
 import { QuestionAttempt } from './question-attempt.entity';
 
 @ObjectType()
@@ -27,6 +28,6 @@ export class QuizAttempt extends Item {
   @Field(() => [QuestionAttempt])
   answers: QuestionAttempt[];
 
-  // @Field(() => User)
-  // user: User; // TODO: make resolve field
+  @Field(() => User)
+  user: User; // TODO: make resolve field
 }

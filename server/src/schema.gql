@@ -119,6 +119,7 @@ type QuizAttempt {
   score: Int!
   scorePercentage: Float!
   timestamp: Long!
+  user: User!
   userId: ID!
 }
 

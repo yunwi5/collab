@@ -1,15 +1,27 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { CurrentUser } from 'src/users/decorator';
 import { JwtUser } from 'src/auth/auth.types';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards';
+import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/entities';
 import { QuizAttemptsService } from './quiz-attempts.service';
 import { QuizAttempt } from './entities/quiz-attempt.entity';
 import { QuizAttemptInput } from './dto/quiz-attempt.input';
 
 @Resolver(() => QuizAttempt)
 export class QuizAttemptsResolver {
-  constructor(private readonly quizAttemptsService: QuizAttemptsService) {}
+  constructor(
+    private readonly quizAttemptsService: QuizAttemptsService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Mutation(() => QuizAttempt)
   @UseGuards(JwtAuthGuard)
@@ -37,5 +49,10 @@ export class QuizAttemptsResolver {
     @Args('userId') userId: string,
   ) {
     return this.quizAttemptsService.findByQuizAndUserId(quizId, userId);
+  }
+
+  @ResolveField(() => User, { name: 'user' })
+  findUser(@Parent() quizAttempt: QuizAttempt): Promise<User> {
+    return this.usersService.findById(quizAttempt.userId);
   }
 }
