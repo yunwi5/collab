@@ -26,6 +26,7 @@ export const quizAttemptSchema = new dynamoose.Schema({
       rangeKey: 'timestamp',
     },
   },
+  creatorId: String,
   timestamp: { type: Number, required: true },
   score: Number,
   scorePercentage: {

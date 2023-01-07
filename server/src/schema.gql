@@ -114,7 +114,9 @@ type Quiz {
 
 type QuizAttempt {
   answers: [QuestionAttempt!]!
+  creatorId: ID!
   pass: Boolean!
+  quiz: Quiz!
   quizId: ID!
   score: Int!
   scorePercentage: Float!

@@ -10,8 +10,8 @@ import { getErrorMessage, isValidationError } from 'src/utils/error.util';
 import { dbTables } from 'src/config/env.config';
 import { QuizAttemptInput } from './dto';
 import { getQuizScore, getTotalQuizScore } from './util';
+import { QuizAttempt } from './entities';
 import { QuizAttemptModel } from './db/quiz-attempt.model';
-import { QuizAttempt } from './entities/quiz-attempt.entity';
 
 @Injectable()
 export class QuizAttemptsService {
@@ -47,6 +47,7 @@ export class QuizAttemptsService {
     const attemptHistory = {
       quizId,
       userId,
+      creatorId,
       timestamp: Date.now(),
       score: userQuizScore,
       scorePercentage: userScorePercentage,

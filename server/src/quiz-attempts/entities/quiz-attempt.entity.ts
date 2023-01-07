@@ -13,6 +13,9 @@ export class QuizAttempt extends Item {
   @Field(() => ID)
   userId: string;
 
+  @Field(() => ID)
+  creatorId: string; // for finding the quiz by creator and quiz ID
+
   @Field(() => GraphQLLong)
   timestamp: number;
 

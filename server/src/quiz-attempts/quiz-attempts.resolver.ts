@@ -12,6 +12,8 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entities';
+import { Quiz } from 'src/quizzes/entities/quiz.entity';
+import { QuizzesService } from 'src/quizzes/quizzes.service';
 import { QuizAttemptsService } from './quiz-attempts.service';
 import { QuizAttempt } from './entities/quiz-attempt.entity';
 import { QuizAttemptInput } from './dto/quiz-attempt.input';
@@ -20,6 +22,7 @@ import { QuizAttemptInput } from './dto/quiz-attempt.input';
 export class QuizAttemptsResolver {
   constructor(
     private readonly quizAttemptsService: QuizAttemptsService,
+    private readonly quizzesService: QuizzesService,
     private readonly usersService: UsersService,
   ) {}
 
@@ -54,5 +57,13 @@ export class QuizAttemptsResolver {
   @ResolveField(() => User, { name: 'user' })
   findUser(@Parent() quizAttempt: QuizAttempt): Promise<User> {
     return this.usersService.findById(quizAttempt.userId);
+  }
+
+  @ResolveField(() => Quiz, { name: 'quiz' })
+  findQuiz(@Parent() quizAttempt: QuizAttempt): Promise<Quiz> {
+    return this.quizzesService.findByCreatorAndQuizId(
+      quizAttempt.creatorId,
+      quizAttempt.quizId,
+    );
   }
 }
