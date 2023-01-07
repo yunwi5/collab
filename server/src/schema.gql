@@ -54,6 +54,7 @@ type Mutation {
   removeUser(id: String!): User!
   signIn(signInInput: SignInInput!): SignInResponse!
   signUp(signUpInput: SignUpInput!): User!
+  submitQuizAttempt(quizAttemptInput: QuizAttemptInput!): QuizAttempt!
   updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
   updateQuiz(updateQuizInput: UpdateQuizInput!): Quiz!
   updateUser(updateUserInput: UpdateUserInput!): User!
@@ -63,6 +64,9 @@ type Mutation {
 type Query {
   questionsByQuiz(quizId: String!): [Question!]!
   quiz(creatorId: String!, quizId: String!): Quiz!
+  quizAttempt(quizId: String!, userId: String!): QuizAttempt!
+  quizAttemptsByQuiz(quizId: String!): [QuizAttempt!]!
+  quizAttemptsByUser(userId: String!): [QuizAttempt!]!
   quizzes: [Quiz!]!
   quizzesByCreator(creatorId: String!): [Quiz!]!
   user(id: String!): User!
@@ -81,6 +85,16 @@ type Question {
   updatedAt: Long!
 }
 
+type QuestionAttempt {
+  questionId: ID!
+  selectedOptions: [String!]!
+}
+
+input QuestionAttemptInput {
+  questionId: ID!
+  selectedOptions: [String!]!
+}
+
 type Quiz {
   createdAt: Long!
   creator: User!
@@ -96,6 +110,22 @@ type Quiz {
   topic: String!
   updatedAt: Long!
   votes: [Vote!]!
+}
+
+type QuizAttempt {
+  answers: [QuestionAttempt!]!
+  pass: Boolean!
+  quizId: ID!
+  score: Int!
+  scorePercentage: Float!
+  timestamp: Long!
+  userId: ID!
+}
+
+input QuizAttemptInput {
+  answers: [QuestionAttemptInput!]!
+  creatorId: ID!
+  quizId: ID!
 }
 
 input SignInInput {

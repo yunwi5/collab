@@ -21,7 +21,7 @@ export class CreateQuizInput {
   @IsInt()
   @Min(50)
   @Max(100)
-  passScore: number;
+  passScore: number; // between 50% and 100%
 
   @Field(() => [CreateQuestionBaseInput], { nullable: true })
   questions?: CreateQuestionBaseInput[];

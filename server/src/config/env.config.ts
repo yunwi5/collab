@@ -10,6 +10,9 @@ const userTableNameIndex = process.env.USER_TABLE_NAME_INDEX;
 const quizTable = `${appName}-${process.env.QUIZ_TABLE}`;
 const questionTable = `${appName}-${process.env.QUESTION_TABLE}`;
 
+const quizAttemptTable = `${appName}-${process.env.ATTEMPT_HISTORY_TABLE}`;
+const quizAttemptUserIndex = process.env.ATTEMPT_HISTORY_TABLE_USER_INDEX;
+
 export const envConfig = Object.freeze({
   AwsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
   AwsAccessSecret: process.env.AWS_SECRET_ACCESS_KEY,
@@ -31,6 +34,8 @@ export const dbTables = Object.freeze({
   UserTableNameIndex: userTableNameIndex,
   QuizTable: quizTable,
   QuestionTable: questionTable,
+  QuizAttemptTable: quizAttemptTable,
+  QuizAttemptUserIndex: quizAttemptUserIndex,
 });
 
 console.log(dbTables);

@@ -1,8 +1,11 @@
 import { isProduction } from '.';
 
 // Database validation exception
-export function isValidationError(err: Error) {
-  return err.name === 'ValidationException' || err.name === 'ValidationError';
+export function isValidationError(err: Error | unknown) {
+  return (
+    err instanceof Error &&
+    (err.name === 'ValidationException' || err.name === 'ValidationError')
+  );
 }
 
 export function getErrorMessage(err: unknown, defaultMessage?: string) {
