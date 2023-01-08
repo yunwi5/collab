@@ -15,7 +15,7 @@ import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { getErrorMessage } from 'src/utils/error.util';
 import { S3Service } from './s3.service';
 
-const IMAGE_SIZE_LIMIT = 5242880;
+const IMAGE_SIZE_LIMIT = 5_242_880;
 
 @Controller('s3')
 export class S3Controller {
@@ -50,8 +50,7 @@ export class S3Controller {
   @Delete(':key')
   async deleteOne(@Param('key') key: string) {
     try {
-      const result = await this.s3Service.deleteImage(key);
-      console.log(result);
+      await this.s3Service.deleteImage(key);
     } catch (err) {
       console.log(getErrorMessage(err));
       throw new InternalServerErrorException('Could not delete an image');
