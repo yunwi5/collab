@@ -24,6 +24,7 @@ resource "aws_dynamodb_table" "article_table" {
   global_secondary_index {
     name               = var.article_table_creator_index
     hash_key           = "creatorId"
+    range_key          = "articleId"
     write_capacity     = 2
     read_capacity      = 2
     projection_type    = "INCLUDE"
