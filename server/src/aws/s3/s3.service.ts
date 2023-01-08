@@ -23,7 +23,7 @@ export class S3Service {
     await unlinkFile(path);
   }
 
-  async upload(file: Express.Multer.File) {
+  async uploadImage(file: Express.Multer.File) {
     const fileStream = fs.createReadStream(file.path);
 
     const params = {
@@ -35,12 +35,21 @@ export class S3Service {
     return this.s3.upload(params).promise();
   }
 
-  findAsReadStream(fileKey: string) {
+  findAsReadStream(imageKey: string) {
     const downloadParams = {
-      Key: fileKey,
+      Key: imageKey,
       Bucket: envConfig.ImageBucketName,
     };
 
     return this.s3.getObject(downloadParams).createReadStream();
+  }
+
+  async deleteImage(imageKey: string) {
+    const params = {
+      Bucket: envConfig.ImageBucketName,
+      Key: imageKey,
+    };
+
+    return this.s3.deleteObject(params).promise();
   }
 }

@@ -7,6 +7,7 @@ import {
   UploadedFile,
   InternalServerErrorException,
   Res,
+  Delete,
 } from '@nestjs/common';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Response } from 'express';
@@ -27,7 +28,7 @@ export class S3Controller {
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     console.log(file);
     try {
-      const result = await this.s3Service.upload(file);
+      const result = await this.s3Service.uploadImage(file);
       console.log(result);
       await this.s3Service.deleteLocalUpload(file.path);
       return { srcKey: result.Key, url: result.Location };
@@ -44,5 +45,16 @@ export class S3Controller {
     });
 
     return readStream.pipe(res);
+  }
+
+  @Delete(':key')
+  async deleteOne(@Param('key') key: string) {
+    try {
+      const result = await this.s3Service.deleteImage(key);
+      console.log(result);
+    } catch (err) {
+      console.log(getErrorMessage(err));
+      throw new InternalServerErrorException('Could not delete an image');
+    }
   }
 }
