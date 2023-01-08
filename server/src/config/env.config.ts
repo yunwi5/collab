@@ -38,5 +38,3 @@ export const dbTables = Object.freeze({
   QuizAttemptTable: quizAttemptTable,
   QuizAttemptUserIndex: quizAttemptUserIndex,
 });
-
-console.log(envConfig);
