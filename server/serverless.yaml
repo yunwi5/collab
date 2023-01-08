@@ -34,6 +34,13 @@ provider:
             - 'dynamodb:BatchGetItem'
             - 'dynamodb:BatchWriteItem'
           Resource: 'arn:aws:dynamodb:ap-southeast-2:765411096544:table/*'
+        - Effect: Allow
+          Action:
+            - 's3:GetObject'
+            - 's3:PutObject'
+            - 's3:DeleteObject'
+            - 's3:PutObjectTagging'
+          Resource: 'arn:aws:s3:::collab-image-bucket/*'
 
   environment:
     APP_NAME: ${env:APP_NAME}
@@ -44,6 +51,7 @@ provider:
     GITHUB_CLIENT_ID: ${env:GITHUB_CLIENT_ID}
     GITHUB_CLIENT_SECRET: ${env:GITHUB_CLIENT_SECRET}
     GITHUB_AUTH_CALLBACK: ${env:GITHUB_AUTH_CALLBACK}
+    IMAGE_S3_BUCKET: ${env:IMAGE_S3_BUCKET}
     USER_TABLE: ${env:USER_TABLE}
     USER_TABLE_NAME_INDEX: ${env:USER_TABLE_NAME_INDEX}
     QUIZ_TABLE: ${env:QUIZ_TABLE}
