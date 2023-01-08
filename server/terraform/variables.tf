@@ -10,6 +10,10 @@ variable "app_name" {
   default = "Collab"
 }
 
+variable "image_s3_name" {
+  default = "image-bucket"
+}
+
 variable "user_table_name" {
   default = "User"
 }

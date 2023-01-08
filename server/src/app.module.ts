@@ -13,6 +13,7 @@ import { AuthSsoModule } from './auth-sso/auth-sso.module';
 import { QuizzesModule } from './quizzes/quizzes.module';
 import { QuestionsModule } from './questions/questions.module';
 import { QuizAttemptsModule } from './quiz-attempts/quiz-attempts.module';
+import { S3Module } from './aws/s3/s3.module';
 
 @Module({
   imports: [
@@ -24,11 +25,12 @@ import { QuizAttemptsModule } from './quiz-attempts/quiz-attempts.module';
       sortSchema: true,
     }),
     AuthModule,
-    UsersModule,
     AuthSsoModule,
+    UsersModule,
     QuizzesModule,
     QuestionsModule,
     QuizAttemptsModule,
+    S3Module,
   ],
   controllers: [AppController],
   providers: [AppService],
