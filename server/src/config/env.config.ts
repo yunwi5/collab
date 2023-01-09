@@ -12,6 +12,7 @@ const questionTable = `${appName}-${process.env.QUESTION_TABLE}`;
 
 const quizAttemptTable = `${appName}-${process.env.ATTEMPT_HISTORY_TABLE}`;
 const quizAttemptUserIndex = process.env.ATTEMPT_HISTORY_TABLE_USER_INDEX;
+const commentTable = `${appName}-${process.env.COMMENT_TABLE}`;
 
 export const envConfig = Object.freeze({
   AwsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -37,4 +38,5 @@ export const dbTables = Object.freeze({
   QuestionTable: questionTable,
   QuizAttemptTable: quizAttemptTable,
   QuizAttemptUserIndex: quizAttemptUserIndex,
+  CommentTable: commentTable,
 });
