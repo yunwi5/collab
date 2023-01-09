@@ -1,3 +1,18 @@
+output "iam_user_name" {
+  value = aws_iam_user.collab_user.name
+  description = "AWS iam user name"
+}
+
+output "iam_user_id" {
+  value       = aws_iam_access_key.collab_access_key.id
+  description = "AWS iam user access key id"
+}
+
+output "s3_bucket_arn" {
+  value       = aws_s3_bucket.image_s3.arn
+  description = "AWS resource name of the image uploading bucket"
+}
+
 output "user_table_arn" {
   value       = aws_dynamodb_table.user_table.arn
   description = "AWS resource name of the user table."
@@ -47,9 +62,4 @@ output "program_collaborator_table_arn" {
 output "comment_table_arn" {
   value       = aws_dynamodb_table.comment_table.arn
   description = "AWS resource name of the comment table."
-}
-
-output "s3_bucket_arn" {
-  value       = aws_s3_bucket.image_s3.arn
-  description = "AWS resource name of the image uploading bucket"
 }
