@@ -19,7 +19,7 @@ import { QuizzesService } from './quizzes.service';
 import { Quiz } from './entities/quiz.entity';
 import { CreateQuizInput } from './dto/create-quiz.input';
 import { UpdateQuizInput } from './dto/update-quiz.input';
-import { CreateVoteInput } from './dto/create-vote.input';
+import { CreateQuizVoteInput } from './dto/create-quiz-vote.input';
 
 @Resolver(() => Quiz)
 export class QuizzesResolver {
@@ -91,7 +91,7 @@ export class QuizzesResolver {
   @UseGuards(JwtAuthGuard)
   voteQuiz(
     @CurrentUser() user: JwtUser,
-    @Args('createVoteInput') createVoteInput: CreateVoteInput,
+    @Args('createVoteInput') createVoteInput: CreateQuizVoteInput,
   ) {
     return this.quizzesService.voteQuiz(user.userId, createVoteInput);
   }

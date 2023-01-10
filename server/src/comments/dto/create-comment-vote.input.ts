@@ -2,12 +2,12 @@ import { Field, ID, InputType } from '@nestjs/graphql';
 import { VoteType } from 'src/models';
 
 @InputType()
-export class CreateVoteInput {
+export class CreateCommentVoteInput {
   @Field(() => ID)
-  creatorId: string;
+  parentId: string;
 
   @Field(() => ID)
-  quizId: string;
+  commentId: string;
 
   @Field(() => VoteType)
   type: VoteType;

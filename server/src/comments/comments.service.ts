@@ -8,7 +8,12 @@ import {
 import crypto from 'crypto';
 
 import { getErrorMessage, isValidationError } from 'src/utils/error.util';
-import { CreateCommentInput, UpdateCommentInput } from './dto';
+import { Vote } from 'src/models';
+import {
+  CreateCommentInput,
+  CreateCommentVoteInput,
+  UpdateCommentInput,
+} from './dto';
 import { CommentModel } from './db/comment.model';
 import { Comment } from './entities';
 
@@ -95,5 +100,29 @@ export class CommentsService {
     await existingComment.delete();
 
     return existingComment;
+  }
+
+  async voteComment(
+    userId: string,
+    createVoteInput: CreateCommentVoteInput,
+  ): Promise<Comment> {
+    const comment = await this.findOne(
+      createVoteInput.parentId,
+      createVoteInput.commentId,
+    );
+    if (comment == null) {
+      throw new NotFoundException('Comment not found');
+    }
+
+    const vote: Vote = {
+      userId,
+      type: createVoteInput.type,
+    };
+
+    const filteredVotes = comment.votes.filter(c => c.userId !== userId);
+    comment.votes = [...filteredVotes, vote];
+
+    await comment.save();
+    return comment;
   }
 }

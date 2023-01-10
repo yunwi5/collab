@@ -19,6 +19,12 @@ input CreateCommentInput {
   parentId: ID!
 }
 
+input CreateCommentVoteInput {
+  commentId: ID!
+  parentId: ID!
+  type: VoteType!
+}
+
 input CreateQuestionBaseInput {
   correctOptions: [String!]!
   options: [String!]!
@@ -45,17 +51,17 @@ input CreateQuizInput {
   topic: String!
 }
 
+input CreateQuizVoteInput {
+  creatorId: ID!
+  quizId: ID!
+  type: VoteType!
+}
+
 input CreateUserInput {
   email: String!
   password: String!
   picture: String
   username: String!
-}
-
-input CreateVoteInput {
-  creatorId: ID!
-  quizId: ID!
-  type: VoteType!
 }
 
 """The `Long` scalar type represents 52-bit integers"""
@@ -78,7 +84,8 @@ type Mutation {
   updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
   updateQuiz(updateQuizInput: UpdateQuizInput!): Quiz!
   updateUser(updateUserInput: UpdateUserInput!): User!
-  voteQuiz(createVoteInput: CreateVoteInput!): Quiz!
+  voteComment(createVoteInput: CreateCommentVoteInput!): Comment!
+  voteQuiz(createVoteInput: CreateQuizVoteInput!): Quiz!
 }
 
 type Query {

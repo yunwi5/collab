@@ -14,7 +14,11 @@ import { User } from 'src/users/entities';
 import { UsersService } from 'src/users/users.service';
 import { CommentsService } from './comments.service';
 import { Comment } from './entities';
-import { CreateCommentInput, UpdateCommentInput } from './dto';
+import {
+  CreateCommentInput,
+  CreateCommentVoteInput,
+  UpdateCommentInput,
+} from './dto';
 
 @Resolver(() => Comment)
 export class CommentsResolver {
@@ -57,6 +61,15 @@ export class CommentsResolver {
     @Args('commentId') commentId: string,
   ) {
     return this.commentsService.remove(user.userId, parentId, commentId);
+  }
+
+  @Mutation(() => Comment)
+  @UseGuards(JwtAuthGuard)
+  voteComment(
+    @CurrentUser() user: JwtUser,
+    @Args('createVoteInput') createVoteInput: CreateCommentVoteInput,
+  ) {
+    return this.commentsService.voteComment(user.userId, createVoteInput);
   }
 
   @ResolveField(() => User, { name: 'user' })

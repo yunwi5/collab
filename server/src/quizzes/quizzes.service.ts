@@ -17,7 +17,7 @@ import { CreateQuizInput } from './dto/create-quiz.input';
 import { UpdateQuizInput } from './dto/update-quiz.input';
 import { QuizModel } from './db/quiz.model';
 import { Quiz } from './entities/quiz.entity';
-import { CreateVoteInput } from './dto/create-vote.input';
+import { CreateQuizVoteInput } from './dto/create-quiz-vote.input';
 
 @Injectable()
 export class QuizzesService {
@@ -142,7 +142,7 @@ export class QuizzesService {
 
   async voteQuiz(
     userId: string,
-    createVoteInput: CreateVoteInput,
+    createVoteInput: CreateQuizVoteInput,
   ): Promise<Quiz> {
     const quiz = await this.findByCreatorAndQuizId(
       createVoteInput.creatorId,
