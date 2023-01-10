@@ -4,6 +4,7 @@ import { Item } from 'dynamoose/dist/Item';
 import { User } from 'src/users/entities';
 import { Vote } from 'src/models';
 import { Question } from 'src/questions/entities';
+import { Comment } from 'src/comments/entities';
 
 @ObjectType()
 export class Quiz extends Item {
@@ -42,4 +43,7 @@ export class Quiz extends Item {
 
   @Field(() => [Question])
   questions: Question[]; // resolve field
+
+  @Field(() => [Comment])
+  comments: Comment[];
 }
