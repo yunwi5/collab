@@ -1,15 +1,27 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/users/decorator';
 import { JwtUser } from 'src/auth/auth.types';
 import { JwtAuthGuard } from 'src/auth/guards';
+import { User } from 'src/users/entities';
+import { UsersService } from 'src/users/users.service';
 import { CommentsService } from './comments.service';
 import { Comment } from './entities';
 import { CreateCommentInput, UpdateCommentInput } from './dto';
 
 @Resolver(() => Comment)
 export class CommentsResolver {
-  constructor(private readonly commentsService: CommentsService) {}
+  constructor(
+    private readonly commentsService: CommentsService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Mutation(() => Comment)
   @UseGuards(JwtAuthGuard)
@@ -45,5 +57,10 @@ export class CommentsResolver {
     @Args('commentId') commentId: string,
   ) {
     return this.commentsService.remove(user.userId, parentId, commentId);
+  }
+
+  @ResolveField(() => User, { name: 'user' })
+  findUser(@Parent() comment: Comment): Promise<User> {
+    return this.usersService.findById(comment.userId);
   }
 }
