@@ -15,6 +15,8 @@ import { User } from 'src/users/entities';
 import { UsersService } from 'src/users/users.service';
 import { Question } from 'src/questions/entities';
 import { QuestionsService } from 'src/questions/questions.service';
+import { CommentsService } from 'src/comments/comments.service';
+import { Comment } from 'src/comments/entities';
 import { QuizzesService } from './quizzes.service';
 import { Quiz } from './entities/quiz.entity';
 import { CreateQuizInput } from './dto/create-quiz.input';
@@ -27,6 +29,7 @@ export class QuizzesResolver {
     private readonly quizzesService: QuizzesService,
     private readonly questionsService: QuestionsService,
     private readonly usersService: UsersService,
+    private readonly commentsService: CommentsService,
   ) {}
 
   @Mutation(() => Quiz)
@@ -77,6 +80,15 @@ export class QuizzesResolver {
     return this.quizzesService.remove(user.userId, quizId);
   }
 
+  @Mutation(() => Quiz)
+  @UseGuards(JwtAuthGuard)
+  voteQuiz(
+    @CurrentUser() user: JwtUser,
+    @Args('createVoteInput') createVoteInput: CreateQuizVoteInput,
+  ) {
+    return this.quizzesService.voteQuiz(user.userId, createVoteInput);
+  }
+
   @ResolveField(() => User, { name: 'creator' })
   findCreator(@Parent() quiz: Quiz): Promise<User> {
     return this.usersService.findById(quiz.creatorId);
@@ -87,12 +99,8 @@ export class QuizzesResolver {
     return this.questionsService.findAllByQuizId(quiz.quizId);
   }
 
-  @Mutation(() => Quiz)
-  @UseGuards(JwtAuthGuard)
-  voteQuiz(
-    @CurrentUser() user: JwtUser,
-    @Args('createVoteInput') createVoteInput: CreateQuizVoteInput,
-  ) {
-    return this.quizzesService.voteQuiz(user.userId, createVoteInput);
+  @ResolveField(() => [Comment], { name: 'comments' })
+  findComments(@Parent() quiz: Quiz): Promise<Comment[]> {
+    return this.commentsService.findAllByParentId(quiz.quizId);
   }
 }

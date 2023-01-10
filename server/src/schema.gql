@@ -129,6 +129,7 @@ input QuestionAttemptInput {
 }
 
 type Quiz {
+  comments: [Comment!]!
   createdAt: Long!
   creator: User!
   creatorId: ID!
