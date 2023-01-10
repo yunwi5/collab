@@ -63,4 +63,9 @@ export class CommentsResolver {
   findUser(@Parent() comment: Comment): Promise<User> {
     return this.usersService.findById(comment.userId);
   }
+
+  @ResolveField(() => [Comment], { name: 'childComments' })
+  findChildComments(@Parent() comment: Comment): Promise<Comment[]> {
+    return this.commentsService.findAllByParentId(comment.commentId);
+  }
 }

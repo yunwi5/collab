@@ -29,4 +29,7 @@ export class Comment extends Item {
 
   @Field(() => User)
   user: User;
+
+  @Field(() => [Comment])
+  childComments: Comment[];
 }
