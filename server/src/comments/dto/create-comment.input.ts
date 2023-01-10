@@ -5,7 +5,7 @@ import { IsUUID, Length } from 'class-validator';
 export class CreateCommentInput {
   @Field(() => ID)
   @IsUUID()
-  parentId: number;
+  parentId: string;
 
   @Field()
   @Length(5, 1000)

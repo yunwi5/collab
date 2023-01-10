@@ -14,6 +14,10 @@ export const commentSchema = new dynamoose.Schema(
       type: String,
       rangeKey: true,
     },
+    userId: {
+      type: String,
+      required: true,
+    },
     content: {
       type: String,
       required: true,
@@ -30,7 +34,7 @@ export const commentSchema = new dynamoose.Schema(
 );
 
 export const CommentModel = dynamoose.model<Comment>(
-  dbTables.QuizTable,
+  dbTables.CommentTable,
   commentSchema,
   {
     create: false,

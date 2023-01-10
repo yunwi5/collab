@@ -1,42 +1,49 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
+import { CurrentUser } from 'src/users/decorator';
+import { JwtUser } from 'src/auth/auth.types';
+import { JwtAuthGuard } from 'src/auth/guards';
 import { CommentsService } from './comments.service';
-import { Comment } from './entities/comment.entity';
-import { CreateCommentInput } from './dto/create-comment.input';
-import { UpdateCommentInput } from './dto/update-comment.input';
+import { Comment } from './entities';
+import { CreateCommentInput, UpdateCommentInput } from './dto';
 
 @Resolver(() => Comment)
 export class CommentsResolver {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Mutation(() => Comment)
+  @UseGuards(JwtAuthGuard)
   createComment(
+    @CurrentUser() user: JwtUser,
     @Args('createCommentInput') createCommentInput: CreateCommentInput,
   ) {
-    return this.commentsService.create(createCommentInput);
-  }
-
-  @Query(() => [Comment], { name: 'comments' })
-  findAll() {
-    return this.commentsService.findAll();
+    return this.commentsService.create(user.userId, createCommentInput);
   }
 
   @Query(() => Comment, { name: 'comment' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.commentsService.findOne(id);
+  findOne(
+    @Args('parentId') parentId: string,
+    @Args('commentId') commentId: string,
+  ) {
+    return this.commentsService.findOne(parentId, commentId);
   }
 
   @Mutation(() => Comment)
+  @UseGuards(JwtAuthGuard)
   updateComment(
+    @CurrentUser() user: JwtUser,
     @Args('updateCommentInput') updateCommentInput: UpdateCommentInput,
   ) {
-    return this.commentsService.update(
-      updateCommentInput.id,
-      updateCommentInput,
-    );
+    return this.commentsService.update(user.userId, updateCommentInput);
   }
 
   @Mutation(() => Comment)
-  removeComment(@Args('id', { type: () => Int }) id: number) {
-    return this.commentsService.remove(id);
+  @UseGuards(JwtAuthGuard)
+  removeComment(
+    @CurrentUser() user: JwtUser,
+    @Args('parentId') parentId: string,
+    @Args('commentId') commentId: string,
+  ) {
+    return this.commentsService.remove(user.userId, parentId, commentId);
   }
 }

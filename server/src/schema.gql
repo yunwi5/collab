@@ -2,6 +2,22 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Comment {
+  commentId: ID!
+  content: String!
+  createdAt: Long!
+  parentId: ID!
+  updatedAt: Long!
+  user: User!
+  userId: ID!
+  votes: [Vote!]!
+}
+
+input CreateCommentInput {
+  content: String!
+  parentId: ID!
+}
+
 input CreateQuestionBaseInput {
   correctOptions: [String!]!
   options: [String!]!
@@ -45,16 +61,19 @@ input CreateVoteInput {
 scalar Long
 
 type Mutation {
+  createComment(createCommentInput: CreateCommentInput!): Comment!
   createQuestion(createQuestionInput: CreateQuestionInput!): Question!
   createQuestions(createQuestionInputs: [CreateQuestionInput!]!): [Question!]!
   createQuiz(createQuizInput: CreateQuizInput!): Quiz!
   createUser(createUserInput: CreateUserInput!): User!
+  removeComment(commentId: String!, parentId: String!): Comment!
   removeQuestion(questionId: String!, quizId: String!): Question!
   removeQuiz(quizId: String!): Quiz!
   removeUser(id: String!): User!
   signIn(signInInput: SignInInput!): SignInResponse!
   signUp(signUpInput: SignUpInput!): User!
   submitQuizAttempt(quizAttemptInput: QuizAttemptInput!): QuizAttempt!
+  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
   updateQuiz(updateQuizInput: UpdateQuizInput!): Quiz!
   updateUser(updateUserInput: UpdateUserInput!): User!
@@ -62,6 +81,7 @@ type Mutation {
 }
 
 type Query {
+  comment(commentId: String!, parentId: String!): Comment!
   questionsByQuiz(quizId: String!): [Question!]!
   quiz(creatorId: String!, quizId: String!): Quiz!
   quizAttempt(quizId: String!, userId: String!): QuizAttempt!
@@ -150,6 +170,12 @@ input SignUpInput {
   email: String!
   password: String!
   username: String!
+}
+
+input UpdateCommentInput {
+  commentId: ID!
+  content: String!
+  parentId: ID!
 }
 
 input UpdateQuestionInput {
