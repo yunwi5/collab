@@ -1,5 +1,5 @@
 import { InputType, Field, ID } from '@nestjs/graphql';
-import { IsUUID, Length } from 'class-validator';
+import { IsOptional, IsUUID, Length } from 'class-validator';
 
 @InputType()
 export class CreateCommentInput {
@@ -10,4 +10,9 @@ export class CreateCommentInput {
   @Field()
   @Length(5, 1000)
   content: string;
+
+  @Field(() => ID, { nullable: true })
+  @IsOptional()
+  @IsUUID()
+  replyTo?: string; // comment ID that this comment directly replies to
 }

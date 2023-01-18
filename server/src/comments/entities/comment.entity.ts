@@ -32,4 +32,7 @@ export class Comment extends Item {
 
   @Field(() => [Comment])
   childComments: Comment[];
+
+  @Field(() => ID, { nullable: true })
+  replyTo?: string; // comment ID that this comment directly replies to
 }

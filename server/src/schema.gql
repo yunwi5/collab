@@ -8,6 +8,8 @@ type Comment {
   content: String!
   createdAt: Long!
   parentId: ID!
+  replyTo: ID
+  replyToComment: Comment
   updatedAt: Long!
   user: User!
   userId: ID!
@@ -17,6 +19,7 @@ type Comment {
 input CreateCommentInput {
   content: String!
   parentId: ID!
+  replyTo: ID
 }
 
 input CreateCommentVoteInput {
@@ -185,6 +188,7 @@ input UpdateCommentInput {
   commentId: ID!
   content: String!
   parentId: ID!
+  replyTo: ID
 }
 
 input UpdateQuestionInput {
