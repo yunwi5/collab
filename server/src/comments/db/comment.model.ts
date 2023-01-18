@@ -18,6 +18,7 @@ export const commentSchema = new dynamoose.Schema(
       type: String,
       required: true,
     },
+    replyTo: String,
     content: {
       type: String,
       required: true,

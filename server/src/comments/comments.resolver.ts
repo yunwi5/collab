@@ -37,11 +37,11 @@ export class CommentsResolver {
   }
 
   @Query(() => Comment, { name: 'comment' })
-  findOne(
+  findByParentAndCommentId(
     @Args('parentId') parentId: string,
     @Args('commentId') commentId: string,
   ) {
-    return this.commentsService.findOne(parentId, commentId);
+    return this.commentsService.findByParentAndCommentId(parentId, commentId);
   }
 
   @Mutation(() => Comment)
@@ -80,5 +80,15 @@ export class CommentsResolver {
   @ResolveField(() => [Comment], { name: 'childComments' })
   findChildComments(@Parent() comment: Comment): Promise<Comment[]> {
     return this.commentsService.findAllByParentId(comment.commentId);
+  }
+
+  @ResolveField(() => Comment, { name: 'replyToComment', nullable: true })
+  findReplyToComment(@Parent() comment: Comment) {
+    if (!comment.replyTo) return null;
+
+    return this.commentsService.findByParentAndCommentId(
+      comment.parentId,
+      comment.replyTo,
+    );
   }
 }

@@ -19,10 +19,28 @@ import { Comment } from './entities';
 
 @Injectable()
 export class CommentsService {
+  async validateReplyTo(commentInput: CreateCommentInput): Promise<boolean> {
+    if (!commentInput.replyTo) return true;
+
+    const { parentId } = commentInput;
+    const replyToParent = await this.findByParentAndCommentId(
+      parentId,
+      commentInput.replyTo,
+    );
+
+    return replyToParent != null;
+  }
+
   async create(
     userId: string,
     createCommentInput: CreateCommentInput,
   ): Promise<Comment> {
+    const replyToValid = await this.validateReplyTo(createCommentInput);
+    if (!replyToValid)
+      throw new BadRequestException(
+        'Comment and reply-to comment should have the same parent',
+      );
+
     try {
       const comment = await CommentModel.create({
         ...createCommentInput,
@@ -32,7 +50,6 @@ export class CommentsService {
       return comment;
     } catch (err) {
       const message = getErrorMessage(err);
-      console.log('message:', message);
       if (isValidationError(err)) {
         throw new BadRequestException(message);
       }
@@ -48,7 +65,10 @@ export class CommentsService {
     }
   }
 
-  findOne(parentId: string, commentId: string): Promise<Comment> {
+  findByParentAndCommentId(
+    parentId: string,
+    commentId: string,
+  ): Promise<Comment> {
     return CommentModel.get({ parentId, commentId });
   }
 
@@ -57,7 +77,10 @@ export class CommentsService {
     parentId: string,
     commentId: string,
   ): Promise<Comment> {
-    const existingComment = await this.findOne(parentId, commentId);
+    const existingComment = await this.findByParentAndCommentId(
+      parentId,
+      commentId,
+    );
 
     if (existingComment == null) {
       throw new NotFoundException('Comment not found');
@@ -106,7 +129,7 @@ export class CommentsService {
     userId: string,
     createVoteInput: CreateCommentVoteInput,
   ): Promise<Comment> {
-    const comment = await this.findOne(
+    const comment = await this.findByParentAndCommentId(
       createVoteInput.parentId,
       createVoteInput.commentId,
     );
