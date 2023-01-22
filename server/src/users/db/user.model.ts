@@ -3,6 +3,7 @@ import * as dynamoose from 'dynamoose';
 import { dbTables } from 'src/config/env.config';
 import { AuthProviderList } from 'src/auth-sso/auth-sso.enum';
 import { validateEmail } from 'src/utils/string.util';
+import { dbTableOptions } from 'src/config/db';
 import { User } from '../entities/user.entity';
 
 export const userSchema = new dynamoose.Schema(
@@ -15,7 +16,10 @@ export const userSchema = new dynamoose.Schema(
         name: dbTables.UserTableNameIndex,
       },
     },
-    displayName: String, // displayable name
+    displayName: {
+      type: String,
+      default: '',
+    }, // displayable name
     email: {
       type: String,
       validate: value => validateEmail(value.toString()),
@@ -23,11 +27,11 @@ export const userSchema = new dynamoose.Schema(
     },
     description: {
       type: String,
-      validate: value => value.toString().length > 3,
+      validate: value => value.toString().length >= 3,
     },
     password: {
       type: String,
-      validate: value => value.toString().length > 6,
+      validate: value => value.toString().length >= 6,
     },
     picture: String,
     provider: { type: String, enum: AuthProviderList },
@@ -38,7 +42,8 @@ export const userSchema = new dynamoose.Schema(
   },
 );
 
-export const UserModel = dynamoose.model<User>(dbTables.UserTable, userSchema, {
-  create: false,
-  waitForActive: false,
-});
+export const UserModel = dynamoose.model<User>(
+  dbTables.UserTable,
+  userSchema,
+  dbTableOptions,
+);

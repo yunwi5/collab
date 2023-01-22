@@ -1,6 +1,7 @@
 import * as dynamoose from 'dynamoose';
 
 import { dbTables } from 'src/config/env.config';
+import { dbTableOptions } from 'src/config/db';
 import { Question } from '../entities';
 
 export const questionSchema = new dynamoose.Schema(
@@ -45,8 +46,5 @@ export const questionSchema = new dynamoose.Schema(
 export const QuestionModel = dynamoose.model<Question>(
   dbTables.QuestionTable,
   questionSchema,
-  {
-    create: false,
-    waitForActive: false,
-  },
+  dbTableOptions,
 );
