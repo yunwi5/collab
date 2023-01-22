@@ -23,4 +23,6 @@ services:
   #     AWS_ACCESS_KEY_ID: 'DUMMYEXAMPLEID'
   #     AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
   #     REGION: 'ap-southeast-2'
-      
+    
+networks:
+  collab:

@@ -16,7 +16,10 @@ export const userSchema = new dynamoose.Schema(
         name: dbTables.UserTableNameIndex,
       },
     },
-    displayName: String, // displayable name
+    displayName: {
+      type: String,
+      default: '',
+    }, // displayable name
     email: {
       type: String,
       validate: value => validateEmail(value.toString()),
@@ -24,11 +27,11 @@ export const userSchema = new dynamoose.Schema(
     },
     description: {
       type: String,
-      validate: value => value.toString().length > 3,
+      validate: value => value.toString().length >= 3,
     },
     password: {
       type: String,
-      validate: value => value.toString().length > 6,
+      validate: value => value.toString().length >= 6,
     },
     picture: String,
     provider: { type: String, enum: AuthProviderList },
