@@ -2,6 +2,7 @@ import * as dynamoose from 'dynamoose';
 
 import { dbTables } from 'src/config/env.config';
 import { voteSchema } from 'src/models';
+import { dbTableOptions } from 'src/config/db';
 import { Comment } from '../entities';
 
 export const commentSchema = new dynamoose.Schema(
@@ -37,8 +38,5 @@ export const commentSchema = new dynamoose.Schema(
 export const CommentModel = dynamoose.model<Comment>(
   dbTables.CommentTable,
   commentSchema,
-  {
-    create: false,
-    waitForActive: false,
-  },
+  dbTableOptions,
 );

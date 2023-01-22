@@ -1,28 +1,26 @@
 version: '3.8'
 services:
   dynamodb-local:
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    command: "-jar DynamoDBLocal.jar -inMemory -sharedDb -cors *"
     image: "amazon/dynamodb-local:latest"
     container_name: dynamodb-local
     ports:
       - "8000:8000"
-    volumes:
-      - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
 
-  collab:
-    build: 
-      context: ./
-      dockerfile: Dockerfile
-    container_name: collab
-    ports:
-      - "8080:8080"
-    depends_on:
-      - "dynamodb-local"
-    links:
-      - "dynamodb-local"
-    environment:
-      AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
-      AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
-      REGION: 'ap-southeast-2'
+  # collab-backend:
+  #   build: 
+  #     context: ./server
+  #     dockerfile: Dockerfile
+  #   container_name: backend
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - "dynamodb-local"
+  #   links:
+  #     - "dynamodb-local"
+  #   environment:
+  #     AWS_ACCESS_KEY_ID: 'DUMMYEXAMPLEID'
+  #     AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
+  #     REGION: 'ap-southeast-2'
       

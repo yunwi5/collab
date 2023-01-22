@@ -1,6 +1,7 @@
 import * as dynamoose from 'dynamoose';
 
 import { dbTables } from 'src/config/env.config';
+import { dbTableOptions } from 'src/config/db';
 import { QuizAttempt } from '../entities/quiz-attempt.entity';
 
 const questionAttemptSchema = new dynamoose.Schema({
@@ -52,8 +53,5 @@ export const quizAttemptSchema = new dynamoose.Schema({
 export const QuizAttemptModel = dynamoose.model<QuizAttempt>(
   dbTables.QuizAttemptTable,
   quizAttemptSchema,
-  {
-    create: false,
-    waitForActive: false,
-  },
+  dbTableOptions,
 );

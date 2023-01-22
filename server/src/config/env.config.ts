@@ -1,7 +1,9 @@
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
-dotenv.config({ path: path.join(process.cwd(), '.env') });
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: path.join(process.cwd(), '.env') });
+}
 
 const appName = process.env.APP_NAME || 'Collab';
 const userTable = `${appName}-${process.env.USER_TABLE}`;
