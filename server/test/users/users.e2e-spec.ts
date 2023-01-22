@@ -1,25 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../../src/app.module';
 import { User } from 'src/users/entities';
 import {
   CREATE_USER_MUTATION,
   CREATE_USER_OPERATION_NAME,
   generateCreateUserVariables,
 } from './create.user.helper';
-import { GET_USERS_OPERATION_NAME, GET_USERS_QUERY } from './get.user.helper';
-import { configureDynamoDB, removeTables } from 'src/config/db';
+import { GET_USERS_OPERATION_NAME, GET_USERS_QUERY } from './get.users.helper';
+import { removeTables } from 'src/config/db';
 
 const GRAPHQL_ENDPOINT = '/graphql';
 
 describe('Users resolver (e2e)', () => {
   let app: INestApplication;
   let user: User;
-
-  beforeAll(async () => {
-    configureDynamoDB();
-  });
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({

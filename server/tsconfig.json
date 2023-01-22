@@ -1,5 +1,13 @@
 {
-  "include": ["./.eslintrc.js", "src/**/*", "test/*", "../client"],
+  "include": [
+    "./.eslintrc.js",
+    "src/**/*",
+    "test/*",
+    "../client",
+    "test/users/users.e2e-spec.ts",
+    "test/users/create.user.helper.ts",
+    "test/users/get.users.helper.ts"
+  ],
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
