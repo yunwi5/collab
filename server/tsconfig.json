@@ -6,7 +6,8 @@
     "../client",
     "test/users/users.e2e-spec.ts",
     "test/users/create.user.helper.ts",
-    "test/users/get.users.helper.ts"
+    "test/users/get.users.helper.ts",
+    "test/auth/auth.e2e-spec.ts"
   ],
   "compilerOptions": {
     "module": "commonjs",

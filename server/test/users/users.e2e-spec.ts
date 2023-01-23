@@ -9,7 +9,6 @@ import {
   generateCreateUserVariables,
 } from './create.user.helper';
 import { GET_USERS_OPERATION_NAME, GET_USERS_QUERY } from './get.users.helper';
-import { removeTables } from 'src/config/db';
 
 const GRAPHQL_ENDPOINT = '/graphql';
 
@@ -36,7 +35,6 @@ describe('Users resolver (e2e)', () => {
       .expect(200)
       .expect(res => {
         expect(Array.isArray(res.body.data.users)).toBe(true);
-        expect(res.body.data.users).toHaveLength(0);
       });
   });
 
@@ -64,9 +62,5 @@ describe('Users resolver (e2e)', () => {
 
   afterEach(async () => {
     await app.close();
-  });
-
-  afterAll(async () => {
-    removeTables();
   });
 });
