@@ -15,11 +15,15 @@ import {
   REMOVE_QUIZ_OPERATION_NAME,
   UPDATE_QUIZ_MUTATION,
   UPDATE_QUIZ_OPERATION_NAME,
+  VOTE_QUIZ_MUTATION,
+  VOTE_QUIZ_OPERATION_NAME,
   generateCreateQuizData,
   generateUpdateQuizData,
+  generateVoteQuizData,
 } from './quiz.helper';
 import { GRAPHQL_ENDPOINT } from 'test/constant';
 import { Quiz } from 'src/quizzes/entities/quiz.entity';
+import { CREATE_COMMENT_MUTATION, CREATE_COMMENT_OPERATION_NAME, generateCreateCommentData } from 'test/comments/comment.helper';
 
 describe('Quiz resolver (e2e)', () => {
   let app: INestApplication;
@@ -78,7 +82,7 @@ describe('Quiz resolver (e2e)', () => {
         expect(Array.isArray(quizzes)).toBe(true);
         expect(quizzes.length).toBeGreaterThanOrEqual(1);
       });
-  })
+  });
 
   it('Should update the quiz', () => {
     const updateQuizInput = generateUpdateQuizData(quiz.quizId).updateQuizInput;
@@ -101,6 +105,50 @@ describe('Quiz resolver (e2e)', () => {
       });
   });
 
+  it('Should vote the quiz', () => {
+    const createVoteInput = generateVoteQuizData(quiz).createVoteInput;
+
+    return request(app.getHttpServer())
+      .post(GRAPHQL_ENDPOINT)
+      .auth(access_token, { type: 'bearer' })
+      .send({
+        operationName: VOTE_QUIZ_OPERATION_NAME,
+        query: VOTE_QUIZ_MUTATION,
+        variables: { createVoteInput },
+      })
+      .expect(200)
+      .expect(res => {
+        quiz = res.body.data.voteQuiz;
+        expect(quiz.votes).toBeDefined();
+        const expectedVote = quiz.votes.find(
+          vote => vote.userId === user.userId,
+        );
+        expect(expectedVote.type).toBe(createVoteInput.type.toLowerCase());
+      });
+  });
+
+  it('Should comment on the quiz', () => {
+    const createCommentInput = generateCreateCommentData({
+      parentId: quiz.quizId,
+    }).createCommentInput;
+
+    return request(app.getHttpServer())
+      .post(GRAPHQL_ENDPOINT)
+      .auth(access_token, { type: 'bearer' })
+      .send({
+        operationName: CREATE_COMMENT_OPERATION_NAME,
+        query: CREATE_COMMENT_MUTATION,
+        variables: { createCommentInput },
+      })
+      .expect(200)
+      .expect(res => {
+        console.log(res);
+        const comment = res.body.data.createComment;
+        expect(comment.parentId).toEqual(quiz.quizId);
+        expect(comment.content).toEqual(createCommentInput.content);
+      });
+  });
+
   it('Should delete the quiz', async () => {
     await request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -118,7 +166,7 @@ describe('Quiz resolver (e2e)', () => {
         expect(quiz.name).toEqual(deletedQuiz.name);
       });
 
-      return request(app.getHttpServer())
+    return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
       .auth(access_token, { type: 'bearer' })
       .send({
@@ -131,7 +179,6 @@ describe('Quiz resolver (e2e)', () => {
         expect(res.body.errors).toBeDefined();
         expect(res.body.data).toBeNull();
       });
-
   });
 
   afterAll(async () => {
