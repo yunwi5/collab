@@ -7,7 +7,7 @@ import { Quiz } from 'src/quizzes/entities/quiz.entity';
 import { GRAPHQL_ENDPOINT } from 'test/constant';
 import { signUpAndIn } from 'test/auth/auth.e2e.util';
 import { createTestQuiz } from 'test/quizzes/quiz.e2e.util';
-import { CREATE_QUESTION_MUTATION, CREATE_QUESTION_OPERATION_NAME, generateCreateQuestionData } from './question.helper';
+import { CREATE_QUESTION_MUTATION, CREATE_QUESTION_OPERATION_NAME, REMOVE_QUESTION_MUTATION, REMOVE_QUESTION_OPERATION_NAME, UPDATE_QUESTION_MUTATION, UPDATE_QUESTION_OPERATION_NAME, generateCreateQuestionData, generateUpdateQuestionData } from './question.helper';
 import { Question } from 'src/questions/entities';
 
 describe('Quiz resolver (e2e)', () => {
@@ -15,6 +15,7 @@ describe('Quiz resolver (e2e)', () => {
   let user: User;
   let access_token: string;
   let quiz: Quiz;
+  let question: Question;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -46,9 +47,9 @@ describe('Quiz resolver (e2e)', () => {
       .expect(200)
       .expect(res => {
         console.log(res);
-        const question: Question = res.body.data.createQuestion;
+        question = res.body.data.createQuestion;
         expect(question).toBeDefined();
-        expect(question.prompt).toEqual(createQuestionInput.prompt);
+        expect(question).toMatchObject(createQuestionInput);
       });
   })
 
@@ -61,10 +62,37 @@ describe('Quiz resolver (e2e)', () => {
   })
 
   it('Should update a question', async () => {
-    // TODO
+    const updateQuestionInput = generateUpdateQuestionData(question).updateQuestionInput;
+
+    return request(app.getHttpServer())
+      .post(GRAPHQL_ENDPOINT)
+      .auth(access_token, { type: 'bearer' })
+      .send({
+        operationName: UPDATE_QUESTION_OPERATION_NAME,
+        query: UPDATE_QUESTION_MUTATION,
+        variables: { updateQuestionInput },
+      })
+      .expect(200)
+      .expect(res => {
+        const updatedQuestion: Question = res.body.data.updateQuestion;
+        expect(updatedQuestion).toBeDefined();
+        expect(updatedQuestion).toMatchObject(updateQuestionInput);
+      });
   })
 
   it('Should delete a question', async () => {
-    // TODO
+    return request(app.getHttpServer())
+      .post(GRAPHQL_ENDPOINT)
+      .auth(access_token, { type: 'bearer' })
+      .send({
+        operationName: REMOVE_QUESTION_OPERATION_NAME,
+        query: REMOVE_QUESTION_MUTATION,
+        variables: { quizId: quiz.quizId, questionId: question.questionId },
+      })
+      .expect(200)
+      .expect(res => {
+        const deletedQuestion: Question = res.body.data.removeQuestion;
+        expect(deletedQuestion).toBeDefined();
+      });
   })
 });
