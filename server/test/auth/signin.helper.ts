@@ -6,6 +6,7 @@ export const SIGN_IN_MUTATION = `
             access_token,
             user {
                 userId,
+                username,
                 displayName,
                 email
             }

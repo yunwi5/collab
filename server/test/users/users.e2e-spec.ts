@@ -16,7 +16,7 @@ describe('Users resolver (e2e)', () => {
   let app: INestApplication;
   let user: User;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -60,7 +60,7 @@ describe('Users resolver (e2e)', () => {
     });
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await app.close();
   });
 });

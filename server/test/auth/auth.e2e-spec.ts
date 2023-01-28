@@ -17,7 +17,7 @@ describe('Auth resolver (e2e)', () => {
   let app: INestApplication;
   let userCredentials: { username: string; password: string };
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -101,7 +101,7 @@ describe('Auth resolver (e2e)', () => {
       });
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await app.close();
   });
 });

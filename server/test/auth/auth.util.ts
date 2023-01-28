@@ -38,7 +38,7 @@ export const signUp = async (
 
 export const signUpAndIn = async (app: INestApplication) => {
   const signUpInput = generateSignUpVariables().signUpInput;
-  let authResponse: {access_token: string, user: User};
+  let authResponse: { access_token: string; user: User };
 
   await signUp(app, signUpInput);
 
@@ -49,18 +49,16 @@ export const signUpAndIn = async (app: INestApplication) => {
       query: SIGN_IN_MUTATION,
       variables: {
         signInInput: {
-          signInInput: {
-            username: signUpInput.username,
-            password: signUpInput.password,
-          },
+          username: signUpInput.username,
+          password: signUpInput.password,
         },
       },
     })
     .expect(200)
     .expect(res => {
-        const { access_token, user } = res.body.data.signIn;
-        authResponse = {access_token, user};
+      const { access_token, user } = res.body.data.signIn;
+      authResponse = { access_token, user };
     });
 
-    return authResponse;
+  return authResponse;
 };
