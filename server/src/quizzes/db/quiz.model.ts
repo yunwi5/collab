@@ -3,8 +3,8 @@ import * as dynamoose from 'dynamoose';
 import { dbTables } from 'src/config/env.config';
 import { voteSchema } from 'src/models';
 import { dbTableOptions } from 'src/config/db';
+import { LevelTypeList } from 'src/models/level/Level.enum';
 import { Quiz } from '../entities/quiz.entity';
-import { LevelEnumList } from '../quizzes.enum';
 
 export const quizSchema = new dynamoose.Schema(
   {
@@ -31,7 +31,7 @@ export const quizSchema = new dynamoose.Schema(
     },
     level: {
       type: String,
-      enum: LevelEnumList,
+      enum: LevelTypeList,
     },
     passScore: {
       type: Number,

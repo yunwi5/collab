@@ -1,5 +1,6 @@
 import { InputType, Field, Float } from '@nestjs/graphql';
 import { IsInt, Length, Max, Min } from 'class-validator';
+import { LevelType } from 'src/models/level/Level.enum';
 import { CreateQuestionBaseInput } from 'src/questions/dto';
 
 @InputType()
@@ -14,8 +15,8 @@ export class CreateQuizInput {
   @Field(() => [String], { defaultValue: [] })
   tags: string[];
 
-  @Field()
-  level: string;
+  @Field(() => LevelType)
+  level: LevelType;
 
   @Field(() => Float, { defaultValue: 70 })
   @IsInt()

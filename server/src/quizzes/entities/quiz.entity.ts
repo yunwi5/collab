@@ -5,6 +5,7 @@ import { User } from 'src/users/entities';
 import { Vote } from 'src/models';
 import { Question } from 'src/questions/entities';
 import { Comment } from 'src/comments/entities';
+import { LevelType } from 'src/models/level/Level.enum';
 
 @ObjectType()
 export class Quiz extends Item {
@@ -29,8 +30,8 @@ export class Quiz extends Item {
   @Field(() => GraphQLLong)
   updatedAt: number;
 
-  @Field()
-  level: string;
+  @Field(() => LevelType)
+  level: LevelType;
 
   @Field(() => Int)
   passScore: number;
