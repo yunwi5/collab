@@ -7,8 +7,7 @@ import {
 } from './signup.helper';
 import { User } from 'src/users/entities';
 import { SIGN_IN_MUTATION, SIGN_IN_OPERATION_NAME } from './signin.helper';
-
-const GRAPHQL_ENDPOINT = '/graphql';
+import { GRAPHQL_ENDPOINT } from 'test/constant';
 
 type SignUpInput = {
   username: string;

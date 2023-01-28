@@ -1,9 +1,11 @@
 import request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { AppModule } from '../../src/app.module';
-import { signUpAndIn } from '../auth/auth.util';
+import { AppModule } from 'src/app.module';
 import { User } from 'src/users/entities';
+import { Quiz } from 'src/quizzes/entities/quiz.entity';
+import { GRAPHQL_ENDPOINT } from 'test/constant';
+import { signUpAndIn } from '../auth/auth.e2e.util';
 import {
   CREATE_QUIZ_MUTATION,
   CREATE_QUIZ_OPERATION_NAME,
@@ -21,9 +23,11 @@ import {
   generateUpdateQuizData,
   generateVoteQuizData,
 } from './quiz.helper';
-import { GRAPHQL_ENDPOINT } from 'test/constant';
-import { Quiz } from 'src/quizzes/entities/quiz.entity';
-import { CREATE_COMMENT_MUTATION, CREATE_COMMENT_OPERATION_NAME, generateCreateCommentData } from 'test/comments/comment.helper';
+import {
+  CREATE_COMMENT_MUTATION,
+  CREATE_COMMENT_OPERATION_NAME,
+  generateCreateCommentData,
+} from 'test/comments/comment.helper';
 
 describe('Quiz resolver (e2e)', () => {
   let app: INestApplication;
