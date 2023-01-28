@@ -1,4 +1,3 @@
-
 import request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
@@ -24,22 +23,12 @@ describe('Quiz resolver (e2e)', () => {
     access_token = authResponse.access_token;
   })
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
-
   it("Test", () => {
     let num = 3;
     expect(num).toEqual(3);
   })
-
   
-  afterEach(async () => {
+  afterAll(async () => {
     await app.close();
   });
 });
