@@ -1,7 +1,5 @@
 import request from 'supertest';
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { AppModule } from 'src/app.module';
 import { User } from 'src/users/entities';
 import { Quiz } from 'src/quizzes/entities/quiz.entity';
 import { GRAPHQL_ENDPOINT } from 'test/constant';
@@ -28,6 +26,7 @@ import {
   CREATE_COMMENT_OPERATION_NAME,
   generateCreateCommentData,
 } from 'test/comments/comment.helper';
+import { E2eTestUtil } from 'test/e2e-test.util';
 
 describe('Quiz resolver (e2e)', () => {
   let app: INestApplication;
@@ -36,12 +35,7 @@ describe('Quiz resolver (e2e)', () => {
   let quiz: Quiz;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    app = await E2eTestUtil.instance.beforeAll(__filename);
 
     const authResponse = await signUpAndIn(app);
     user = authResponse.user;
@@ -201,6 +195,6 @@ describe('Quiz resolver (e2e)', () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    await E2eTestUtil.instance.afterAll(__filename, app);
   });
 });

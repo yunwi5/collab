@@ -18,9 +18,9 @@ import {
   generateUpdateQuestionData,
 } from './question.helper';
 import { Question } from 'src/questions/entities';
+import { E2eTestUtil } from 'test/e2e-test.util';
 
 describe('Quiz resolver (e2e)', () => {
-  jest.setTimeout(3000);
   let app: INestApplication;
   let user: User;
   let access_token: string;
@@ -28,13 +28,8 @@ describe('Quiz resolver (e2e)', () => {
   let question: Question;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
-
+    app = await E2eTestUtil.instance.beforeAll(__filename);
+    
     const authResponse = await signUpAndIn(app);
     user = authResponse.user;
     access_token = authResponse.access_token;
@@ -117,4 +112,8 @@ describe('Quiz resolver (e2e)', () => {
     );
     expect(deletedQuestion).toBeUndefined();
   });
+
+  afterAll(async () => {
+    await E2eTestUtil.instance.afterAll(__filename, app);
+  })
 });

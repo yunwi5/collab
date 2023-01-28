@@ -1,7 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from '../../src/app.module';
 import {
   SIGN_UP_MUTATION,
   SIGN_UP_OPERATION_NAME,
@@ -10,21 +8,16 @@ import {
 } from './signup.helper';
 
 import { SIGN_IN_MUTATION, SIGN_IN_OPERATION_NAME } from './signin.helper';
+import { E2eTestUtil } from 'test/e2e-test.util';
 
 const GRAPHQL_ENDPOINT = '/graphql';
 
 describe('Auth resolver (e2e)', () => {
-  jest.setTimeout(3000);
   let app: INestApplication;
   let userCredentials: { username: string; password: string };
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    app = await E2eTestUtil.instance.beforeAll(__filename);
   });
 
   it('Should sign up user', () => {
@@ -103,6 +96,6 @@ describe('Auth resolver (e2e)', () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    await E2eTestUtil.instance.afterAll(__filename, app);
   });
 });

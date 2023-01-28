@@ -1,7 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from '../../src/app.module';
 import { User } from 'src/users/entities';
 import {
   CREATE_USER_MUTATION,
@@ -9,21 +7,16 @@ import {
   generateCreateUserVariables,
 } from './create.user.helper';
 import { GET_USERS_OPERATION_NAME, GET_USERS_QUERY } from './get.users.helper';
+import { E2eTestUtil } from 'test/e2e-test.util';
 
 const GRAPHQL_ENDPOINT = '/graphql';
 
 describe('Users resolver (e2e)', () => {
-  jest.setTimeout(3000);
   let app: INestApplication;
   let user: User;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    app = await E2eTestUtil.instance.beforeAll(__filename);
   });
 
   it('Should get users', () => {
@@ -62,6 +55,6 @@ describe('Users resolver (e2e)', () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    await E2eTestUtil.instance.afterAll(__filename, app);
   });
 });
