@@ -14,6 +14,7 @@ import { SIGN_IN_MUTATION, SIGN_IN_OPERATION_NAME } from './signin.helper';
 const GRAPHQL_ENDPOINT = '/graphql';
 
 describe('Auth resolver (e2e)', () => {
+  jest.setTimeout(3000);
   let app: INestApplication;
   let userCredentials: { username: string; password: string };
 

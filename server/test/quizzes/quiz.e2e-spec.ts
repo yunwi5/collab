@@ -88,6 +88,22 @@ describe('Quiz resolver (e2e)', () => {
       });
   });
 
+  it('Should get a quiz', () => {
+    return request(app.getHttpServer())
+      .post(GRAPHQL_ENDPOINT)
+      .auth(access_token, { type: 'bearer' })
+      .send({
+        operationName: FIND_QUIZ_OPERATION_NAME,
+        query: FIND_QUIZ_QUERY,
+        variables: { creatorId: quiz.creatorId, quizId: quiz.quizId },
+      })
+      .expect(200)
+      .expect(res => {
+        const quizFound: Quiz = res.body.data.quiz;
+        expect(quizFound).toMatchObject(quiz);
+      });
+  });
+
   it('Should update the quiz', () => {
     const updateQuizInput = generateUpdateQuizData(quiz.quizId).updateQuizInput;
 
@@ -146,7 +162,6 @@ describe('Quiz resolver (e2e)', () => {
       })
       .expect(200)
       .expect(res => {
-        console.log(res);
         const comment = res.body.data.createComment;
         expect(comment.parentId).toEqual(quiz.quizId);
         expect(comment.content).toEqual(createCommentInput.content);

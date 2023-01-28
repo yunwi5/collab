@@ -6,11 +6,21 @@ import { User } from 'src/users/entities';
 import { Quiz } from 'src/quizzes/entities/quiz.entity';
 import { GRAPHQL_ENDPOINT } from 'test/constant';
 import { signUpAndIn } from 'test/auth/auth.e2e.util';
-import { createTestQuiz } from 'test/quizzes/quiz.e2e.util';
-import { CREATE_QUESTION_MUTATION, CREATE_QUESTION_OPERATION_NAME, REMOVE_QUESTION_MUTATION, REMOVE_QUESTION_OPERATION_NAME, UPDATE_QUESTION_MUTATION, UPDATE_QUESTION_OPERATION_NAME, generateCreateQuestionData, generateUpdateQuestionData } from './question.helper';
+import { createTestQuiz, findTestQuiz } from 'test/quizzes/quiz.e2e.util';
+import {
+  CREATE_QUESTION_MUTATION,
+  CREATE_QUESTION_OPERATION_NAME,
+  REMOVE_QUESTION_MUTATION,
+  REMOVE_QUESTION_OPERATION_NAME,
+  UPDATE_QUESTION_MUTATION,
+  UPDATE_QUESTION_OPERATION_NAME,
+  generateCreateQuestionData,
+  generateUpdateQuestionData,
+} from './question.helper';
 import { Question } from 'src/questions/entities';
 
 describe('Quiz resolver (e2e)', () => {
+  jest.setTimeout(3000);
   let app: INestApplication;
   let user: User;
   let access_token: string;
@@ -32,9 +42,10 @@ describe('Quiz resolver (e2e)', () => {
     quiz = await createTestQuiz(app, access_token);
   });
 
-
   it('Should create a question', async () => {
-    const createQuestionInput = generateCreateQuestionData(quiz.quizId).createQuestionInput;
+    const createQuestionInput = generateCreateQuestionData(
+      quiz.quizId,
+    ).createQuestionInput;
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -46,23 +57,23 @@ describe('Quiz resolver (e2e)', () => {
       })
       .expect(200)
       .expect(res => {
-        console.log(res);
         question = res.body.data.createQuestion;
         expect(question).toBeDefined();
         expect(question).toMatchObject(createQuestionInput);
       });
-  })
+  });
 
   it('Should batch create question', async () => {
     // TODO
-  })
+  });
 
   it('Should get all quiz questions', async () => {
     // TODO
-  })
+  });
 
   it('Should update a question', async () => {
-    const updateQuestionInput = generateUpdateQuestionData(question).updateQuestionInput;
+    const updateQuestionInput =
+      generateUpdateQuestionData(question).updateQuestionInput;
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -78,10 +89,10 @@ describe('Quiz resolver (e2e)', () => {
         expect(updatedQuestion).toBeDefined();
         expect(updatedQuestion).toMatchObject(updateQuestionInput);
       });
-  })
+  });
 
   it('Should delete a question', async () => {
-    return request(app.getHttpServer())
+    await request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
       .auth(access_token, { type: 'bearer' })
       .send({
@@ -94,5 +105,16 @@ describe('Quiz resolver (e2e)', () => {
         const deletedQuestion: Question = res.body.data.removeQuestion;
         expect(deletedQuestion).toBeDefined();
       });
-  })
+
+    const updatedQuiz = await findTestQuiz({
+      app,
+      access_token,
+      creatorId: quiz.creatorId,
+      quizId: quiz.quizId,
+    });
+    const deletedQuestion = updatedQuiz.questions.find(
+      q => q.questionId === question.questionId,
+    );
+    expect(deletedQuestion).toBeUndefined();
+  });
 });

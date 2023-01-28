@@ -13,6 +13,7 @@ import { GET_USERS_OPERATION_NAME, GET_USERS_QUERY } from './get.users.helper';
 const GRAPHQL_ENDPOINT = '/graphql';
 
 describe('Users resolver (e2e)', () => {
+  jest.setTimeout(3000);
   let app: INestApplication;
   let user: User;
 
