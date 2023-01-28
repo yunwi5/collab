@@ -2,7 +2,7 @@
   "include": [
     "./.eslintrc.js",
     "src/**/*",
-    "test/*",
+    "test/**/*",
     "../client",
     "test/users/users.e2e-spec.ts",
     "test/users/create.user.helper.ts",
