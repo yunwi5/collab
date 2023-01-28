@@ -8,3 +8,5 @@ export enum VoteType {
 registerEnumType(VoteType, {
   name: 'VoteType',
 });
+
+export const VoteKeyList = Object.keys(VoteType);

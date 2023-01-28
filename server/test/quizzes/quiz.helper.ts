@@ -1,5 +1,6 @@
 import Chance from 'chance';
-import { LevelKeyList, LevelTypeList } from 'src/models/level/Level.enum';
+import { VoteKeyList } from 'src/models';
+import { LevelKeyList } from 'src/models/level/Level.enum';
 const chance = new Chance();
 
 export const CREATE_QUIZ_OPERATION_NAME = 'CreateQuiz';
@@ -12,10 +13,13 @@ export const UPDATE_QUIZ_OPERATION_NAME = 'UpdateQuiz';
 
 export const REMOVE_QUIZ_OPERATION_NAME = 'RemoveQuiz';
 
+export const VOTE_QUIZ_OPERATION_NAME = 'VoteQuiz';
+
 export const CREATE_QUIZ_MUTATION = `
    mutation CreateQuiz($createQuizInput: CreateQuizInput!) {
       createQuiz(createQuizInput: $createQuizInput) {
          quizId,
+         creatorId,
          name,
          topic,
          passScore,
@@ -33,27 +37,7 @@ export const FIND_QUIZZES_QUERY = `
    query Quizzes {
       quizzes {
          quizId,
-         name,
-         topic,
-         passScore,
-         tags,
-         level,
-         creator {
-            userId,
-            username
-         },
-         votes {
-            userId,
-            type
-         }
-      }
-   }
-`
-
-export const FIND_QUIZ_QUERY = `
-   query Quiz($creatorId: String!, $quizId: String!) {
-      quiz(creatorId: $creatorId, quizId: $quizId) {
-         quizId,
+         creatorId,
          name,
          topic,
          passScore,
@@ -75,12 +59,13 @@ export const FIND_QUIZ_QUERY = `
          }
       }
    }
-`
+`;
 
-export const UPDATE_QUIZ_MUTATION = `
-   mutation UpdateQuiz($updateQuizInput: UpdateQuizInput!) {
-      updateQuiz(updateQuizInput: $updateQuizInput) {
+export const FIND_QUIZ_QUERY = `
+   query Quiz($creatorId: String!, $quizId: String!) {
+      quiz(creatorId: $creatorId, quizId: $quizId) {
          quizId,
+         creatorId,
          name,
          topic,
          passScore,
@@ -89,6 +74,44 @@ export const UPDATE_QUIZ_MUTATION = `
          creator {
             userId,
             username
+         },
+         votes {
+            userId,
+            type
+         },
+         comments {
+            parentId,
+            commentId,
+            userId,
+            content,
+         }
+      }
+   }
+`;
+
+export const UPDATE_QUIZ_MUTATION = `
+   mutation UpdateQuiz($updateQuizInput: UpdateQuizInput!) {
+      updateQuiz(updateQuizInput: $updateQuizInput) {
+         quizId,
+         creatorId,
+         name,
+         topic,
+         passScore,
+         tags,
+         level,
+         creator {
+            userId,
+            username
+         },
+         votes {
+            userId,
+            type
+         },
+         comments {
+            parentId,
+            commentId,
+            userId,
+            content,
          }
       }
    }
@@ -103,6 +126,23 @@ export const REMOVE_QUIZ_MUTATION = `
    }
 `;
 
+export const VOTE_QUIZ_MUTATION = `
+   mutation VoteQuiz($createVoteInput: CreateQuizVoteInput!) {
+      voteQuiz(createVoteInput: $createVoteInput) {
+         quizId,
+         creatorId,
+         name,
+         creator {
+            userId,
+            username
+         },
+         votes {
+            userId,
+            type
+         }
+      }
+   }
+`;
 
 export const generateCreateQuizData = () => {
   return {
@@ -125,6 +165,19 @@ export const generateUpdateQuizData = (quizId: string) => {
       passScore: chance.integer({ min: 50, max: 100 }),
       level: chance.pickone(LevelKeyList),
       tags: [chance.string(), chance.string()],
+    },
+  };
+};
+
+export const generateVoteQuizData = (props: {
+  creatorId: string;
+  quizId: string;
+}) => {
+  return {
+    createVoteInput: {
+      creatorId: props.creatorId,
+      quizId: props.quizId,
+      type: chance.pickone(VoteKeyList),
     },
   };
 };
