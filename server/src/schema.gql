@@ -46,7 +46,7 @@ input CreateQuestionInput {
 }
 
 input CreateQuizInput {
-  level: String!
+  level: LevelType!
   name: String!
   passScore: Float! = 70
   questions: [CreateQuestionBaseInput!]
@@ -65,6 +65,13 @@ input CreateUserInput {
   password: String!
   picture: String
   username: String!
+}
+
+enum LevelType {
+  ADVANCED
+  BEGINNER
+  INTERMEDIATE
+  MASTER
 }
 
 """The `Long` scalar type represents 52-bit integers"""
@@ -136,7 +143,7 @@ type Quiz {
   createdAt: Long!
   creator: User!
   creatorId: ID!
-  level: String!
+  level: LevelType!
   name: String!
   passScore: Int!
   questions: [Question!]!
@@ -202,7 +209,7 @@ input UpdateQuestionInput {
 }
 
 input UpdateQuizInput {
-  level: String
+  level: LevelType
   name: String
   passScore: Float = 70
   questions: [CreateQuestionBaseInput!]

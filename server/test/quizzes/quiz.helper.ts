@@ -84,6 +84,11 @@ export const FIND_QUIZ_QUERY = `
             commentId,
             userId,
             content,
+         },
+         questions {
+            questionId,
+            prompt,
+            options,
          }
       }
    }
