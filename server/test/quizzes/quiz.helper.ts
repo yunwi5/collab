@@ -1,6 +1,9 @@
 import Chance from 'chance';
+import * as lodash from 'lodash';
 import { VoteKeyList } from 'src/models';
 import { LevelKeyList } from 'src/models/level/Level.enum';
+import { selectRandomElements } from 'src/utils/random.util';
+
 const chance = new Chance();
 
 export const CREATE_QUIZ_OPERATION_NAME = 'CreateQuiz';
@@ -28,6 +31,12 @@ export const CREATE_QUIZ_MUTATION = `
          creator {
             userId,
             username
+         },
+         questions {
+            questionId,
+            prompt,
+            options,
+            correctOptions
          }
       }
    }
@@ -89,6 +98,7 @@ export const FIND_QUIZ_QUERY = `
             questionId,
             prompt,
             options,
+            correctOptions
          }
       }
    }
@@ -149,7 +159,25 @@ export const VOTE_QUIZ_MUTATION = `
    }
 `;
 
-export const generateCreateQuizData = () => {
+const generateRandomQuestions = (quantity: number): any[] => {
+  return Array(quantity)
+    .fill(0)
+    .map(() => {
+      const options = Array(lodash.random(2, 5))
+        .fill('')
+        .map(() => chance.string({ alpha: true }));
+
+      return {
+        timeLimit: lodash.random(30, 120),
+        prompt: chance.string({ length: lodash.random(10, 100) }),
+        point: lodash.random(1, 10),
+        options,
+        correctOptions: selectRandomElements(options, lodash.random(1, 5)),
+      };
+    });
+};
+
+export const generateCreateQuizData = (shouldCreateQuestions: boolean) => {
   return {
     createQuizInput: {
       topic: chance.string(),
@@ -157,6 +185,9 @@ export const generateCreateQuizData = () => {
       passScore: chance.integer({ min: 50, max: 100 }),
       level: chance.pickone(LevelKeyList),
       tags: [chance.string(), chance.string()],
+      questions: shouldCreateQuestions
+        ? generateRandomQuestions(lodash.random(2, 5))
+        : [],
     },
   };
 };

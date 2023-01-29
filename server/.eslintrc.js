@@ -26,6 +26,7 @@ module.exports = {
     'no-console': 'off',
     'import/prefer-default-export': 'off',
     'import/no-default-export': 'error',
+    'no-plusplus': 'off',
     'import/no-extraneous-dependencies': [
       'error',
       {
