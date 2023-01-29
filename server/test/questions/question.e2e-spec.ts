@@ -1,37 +1,38 @@
 import request from 'supertest';
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { AppModule } from 'src/app.module';
-import { User } from 'src/users/entities';
 import { Quiz } from 'src/quizzes/entities/quiz.entity';
 import { GRAPHQL_ENDPOINT } from 'test/constant';
 import { signUpAndIn } from 'test/auth/auth.e2e.util';
 import { createTestQuiz, findTestQuiz } from 'test/quizzes/quiz.e2e.util';
 import {
+  CREATE_QUESTIONS_MUTATION,
+  CREATE_QUESTIONS_OPERATION_NAME,
   CREATE_QUESTION_MUTATION,
   CREATE_QUESTION_OPERATION_NAME,
+  FIND_QUESTIONS_BY_QUIZ_OPERATION_NAME,
+  FIND_QUESTIONS_BY_QUIZ_QUERY,
   REMOVE_QUESTION_MUTATION,
   REMOVE_QUESTION_OPERATION_NAME,
   UPDATE_QUESTION_MUTATION,
   UPDATE_QUESTION_OPERATION_NAME,
   generateCreateQuestionData,
+  generateCreateQuestionListData,
   generateUpdateQuestionData,
 } from './question.helper';
 import { Question } from 'src/questions/entities';
 import { E2eTestUtil } from 'test/e2e-test.util';
+import { find, random } from 'lodash';
 
 describe('Quiz resolver (e2e)', () => {
   let app: INestApplication;
-  let user: User;
   let access_token: string;
   let quiz: Quiz;
   let question: Question;
 
   beforeAll(async () => {
     app = await E2eTestUtil.instance.beforeAll(__filename);
-    
+
     const authResponse = await signUpAndIn(app);
-    user = authResponse.user;
     access_token = authResponse.access_token;
 
     quiz = await createTestQuiz(app, access_token);
@@ -59,11 +60,51 @@ describe('Quiz resolver (e2e)', () => {
   });
 
   it('Should batch create question', async () => {
-    // TODO
+    const createQuestionInputs = generateCreateQuestionListData(
+      quiz.quizId,
+      random(1, 5),
+    ).createQuestionInputs;
+
+    return request(app.getHttpServer())
+      .post(GRAPHQL_ENDPOINT)
+      .auth(access_token, { type: 'bearer' })
+      .send({
+        operationName: CREATE_QUESTIONS_OPERATION_NAME,
+        query: CREATE_QUESTIONS_MUTATION,
+        variables: { createQuestionInputs },
+      })
+      .expect(200)
+      .expect(res => {
+        const questions: Question[] = res.body.data.createQuestions;
+        createQuestionInputs.forEach(questionInput => {
+          const createdQuestion = find(questions, [
+            'prompt',
+            questionInput.prompt,
+          ]);
+          expect(createdQuestion).toBeDefined();
+          expect(createdQuestion).toMatchObject(questionInput);
+        });
+      });
   });
 
   it('Should get all quiz questions', async () => {
-    // TODO
+    return request(app.getHttpServer())
+      .post(GRAPHQL_ENDPOINT)
+      .auth(access_token, { type: 'bearer' })
+      .send({
+        operationName: FIND_QUESTIONS_BY_QUIZ_OPERATION_NAME,
+        query: FIND_QUESTIONS_BY_QUIZ_QUERY,
+        variables: { quizId: quiz.quizId },
+      })
+      .expect(200)
+      .expect(res => {
+        const quizQuestions: Question[] = res.body.data.questionsByQuiz;
+        expect(Array.isArray(quizQuestions)).toBe(true);
+        expect(quizQuestions.length).toBeGreaterThanOrEqual(1);
+        expect(
+          find(quizQuestions, ['questionId', question.questionId]),
+        ).toBeDefined();
+      });
   });
 
   it('Should update a question', async () => {
@@ -115,5 +156,5 @@ describe('Quiz resolver (e2e)', () => {
 
   afterAll(async () => {
     await E2eTestUtil.instance.afterAll(__filename, app);
-  })
+  });
 });
