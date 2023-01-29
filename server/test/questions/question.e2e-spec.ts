@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import { Quiz } from 'src/quizzes/entities/quiz.entity';
 import { GRAPHQL_ENDPOINT } from 'test/constant';
 import { signUpAndIn } from 'test/auth/auth.e2e.util';
-import { createTestQuiz, findTestQuiz } from 'test/quizzes/quiz.e2e.util';
+import { createRandomQuiz, findQuiz } from 'test/quizzes/quiz.e2e.util';
 import {
   CREATE_QUESTIONS_MUTATION,
   CREATE_QUESTIONS_OPERATION_NAME,
@@ -35,7 +35,11 @@ describe('Quiz resolver (e2e)', () => {
     const authResponse = await signUpAndIn(app);
     access_token = authResponse.access_token;
 
-    quiz = await createTestQuiz(app, access_token);
+    quiz = await createRandomQuiz(app, access_token);
+  });
+
+  afterAll(async () => {
+    await E2eTestUtil.instance.afterAll(__filename, app);
   });
 
   it('Should create a question', async () => {
@@ -142,7 +146,7 @@ describe('Quiz resolver (e2e)', () => {
         expect(deletedQuestion).toBeDefined();
       });
 
-    const updatedQuiz = await findTestQuiz({
+    const updatedQuiz = await findQuiz({
       app,
       access_token,
       creatorId: quiz.creatorId,
@@ -152,9 +156,5 @@ describe('Quiz resolver (e2e)', () => {
       q => q.questionId === question.questionId,
     );
     expect(deletedQuestion).toBeUndefined();
-  });
-
-  afterAll(async () => {
-    await E2eTestUtil.instance.afterAll(__filename, app);
   });
 });

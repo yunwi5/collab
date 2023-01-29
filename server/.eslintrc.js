@@ -18,7 +18,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['dist/**/**', 'test/**', 'jest*.config.js'],
+  ignorePatterns: ['dist/**/**', 'test/**', 'jest*.config.js', 'global.d.ts'],
   rules: {
     'prettier/prettier': 'error',
     'class-methods-use-this': 'off',
@@ -26,6 +26,7 @@ module.exports = {
     'no-console': 'off',
     'import/prefer-default-export': 'off',
     'import/no-default-export': 'error',
+    'no-plusplus': 'off',
     'import/no-extraneous-dependencies': [
       'error',
       {

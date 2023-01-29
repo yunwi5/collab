@@ -10,12 +10,13 @@ import {
 } from './quiz.helper';
 import { Quiz } from 'src/quizzes/entities/quiz.entity';
 
-export const createTestQuiz = async (
+export const createRandomQuiz = async (
   app: INestApplication,
   access_token: string,
+  shouldCreateQuestions: boolean = false,
 ) => {
   let quiz: Quiz;
-  const createQuizInput = generateCreateQuizData().createQuizInput;
+  const createQuizInput = generateCreateQuizData(shouldCreateQuestions).createQuizInput;
 
   await request(app.getHttpServer())
     .post(GRAPHQL_ENDPOINT)
@@ -33,7 +34,7 @@ export const createTestQuiz = async (
   return quiz;
 };
 
-export const findTestQuiz = async (props: {
+export const findQuiz = async (props: {
   app: INestApplication;
   access_token: string;
   creatorId: string;

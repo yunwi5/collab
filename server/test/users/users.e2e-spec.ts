@@ -19,6 +19,10 @@ describe('Users resolver (e2e)', () => {
     app = await E2eTestUtil.instance.beforeAll(__filename);
   });
 
+  afterAll(async () => {
+    await E2eTestUtil.instance.afterAll(__filename, app);
+  });
+
   it('Should get users', () => {
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -52,9 +56,5 @@ describe('Users resolver (e2e)', () => {
           expect(user.email).toBe(createUserInput.email);
         });
     });
-  });
-
-  afterAll(async () => {
-    await E2eTestUtil.instance.afterAll(__filename, app);
   });
 });
