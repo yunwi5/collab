@@ -10,6 +10,8 @@ import {
   FIND_QUIZ_ATTEMPTS_BY_QUIZ_QUERY,
   FIND_QUIZ_ATTEMPTS_BY_USER_OPERATION_NAME,
   FIND_QUIZ_ATTEMPTS_BY_USER_QUERY,
+  FIND_QUIZ_ATTEMPT_OPERATION_NAME,
+  FIND_QUIZ_ATTEMPT_QUERY,
   SUBMIT_QUIZ_ATTEMPT_MUTATION,
   SUBMIT_QUIZ_ATTEMPT_OPERATION_NAME,
   generateSubmitQuizAttemptData,
@@ -52,15 +54,34 @@ describe('Quiz resolver (e2e)', () => {
       })
       .expect(200)
       .expect(res => {
-        const attempt: QuizAttempt = res.body.data.submitQuizAttempt;
-        expect(attempt).toBeDefined();
-        expect(Array.isArray(attempt.answers)).toBe(true);
-        // TODO: Do more validations
+        const newAttempt: QuizAttempt = res.body.data.submitQuizAttempt;
+        expect(newAttempt).toBeDefined();
+        expect(newAttempt).toMatchObject(quizAttemptInput);
+
+        expect([true, false]).toContain(newAttempt.pass);
+        expect(newAttempt.scorePercentage).toBeGreaterThan(0);
+        expect(newAttempt.scorePercentage).toBeWithin(0, 101);
       });
   });
 
   it('Should retrieve a quiz attempt', async () => {
-    // TODO
+    return request(app.getHttpServer())
+      .post(GRAPHQL_ENDPOINT)
+      .send({
+        operationName: FIND_QUIZ_ATTEMPT_OPERATION_NAME,
+        query: FIND_QUIZ_ATTEMPT_QUERY,
+        variables: { quizId: quiz.quizId, userId: user.userId },
+      })
+      .expect(200)
+      .expect(res => {
+        const quizAttempt: QuizAttempt = res.body.data.quizAttempt;
+        expect(quizAttempt).toBeDefined();
+        expect(quizAttempt).toMatchObject({
+          quizId: quiz.quizId,
+          userId: user.userId,
+          creatorId: quiz.creatorId,
+        });
+      });
   });
 
   it('Should retrieve quiz attempts by quiz', async () => {
@@ -93,7 +114,6 @@ describe('Quiz resolver (e2e)', () => {
       .expect(res => {
         const userQuizAttempts: QuizAttempt[] =
           res.body.data.quizAttemptsByUser;
-        console.log('userQuizAttempts', userQuizAttempts);
         expect(Array.isArray(userQuizAttempts)).toBe(true);
 
         const userAttemptOnQuiz = find(userQuizAttempts, [
@@ -105,6 +125,22 @@ describe('Quiz resolver (e2e)', () => {
   });
 
   it('Should replace an existing question attempt', async () => {
-    // TODO
+    const quizReAttemptInput =
+      generateSubmitQuizAttemptData(quiz).quizAttemptInput;
+
+    return request(app.getHttpServer())
+      .post(GRAPHQL_ENDPOINT)
+      .auth(access_token, { type: 'bearer' })
+      .send({
+        operationName: SUBMIT_QUIZ_ATTEMPT_OPERATION_NAME,
+        query: SUBMIT_QUIZ_ATTEMPT_MUTATION,
+        variables: { quizAttemptInput: quizReAttemptInput },
+      })
+      .expect(200)
+      .expect(res => {
+        const newAttempt: QuizAttempt = res.body.data.submitQuizAttempt;
+        expect(newAttempt).toBeDefined();
+        expect(newAttempt).toMatchObject(quizReAttemptInput);
+      });
   });
 });

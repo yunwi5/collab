@@ -2,6 +2,7 @@ module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: './',
   modulePaths: ['<rootDir>'],
+  setupFilesAfterEnv: ['jest-extended/all'],
   verbose: true,
   testTimeout: 30000,
   testRegex: 'spec.ts$',

@@ -2,7 +2,7 @@
   "include": [
     "./.eslintrc.js",
     "src/**/*",
-    "test/**/*"
+    "test/**/*",
   ],
   "compilerOptions": {
     "module": "commonjs",
@@ -25,5 +25,6 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true
-  }
+  },
+  "files": ["global.d.ts"]
 }

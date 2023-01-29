@@ -16,6 +16,25 @@ export const SUBMIT_QUIZ_ATTEMPT_MUTATION = `
             quizId,
             userId,
             score,
+            scorePercentage,
+            pass,
+            timestamp,
+            answers {
+                questionId,
+                selectedOptions
+            }
+        }
+    }
+`;
+
+export const FIND_QUIZ_ATTEMPT_QUERY = `
+    query QuizAttempt($quizId: String!, $userId: String!) {
+        quizAttempt(quizId: $quizId, userId: $userId) {
+            creatorId,
+            quizId,
+            userId,
+            score,
+            scorePercentage,
             pass,
             timestamp,
             answers {
@@ -33,6 +52,7 @@ export const FIND_QUIZ_ATTEMPTS_BY_QUIZ_QUERY = `
             quizId,
             userId,
             score,
+            scorePercentage,
             pass,
             timestamp,
             answers {
@@ -51,6 +71,7 @@ export const FIND_QUIZ_ATTEMPTS_BY_USER_QUERY = `
             userId,
             score,
             pass,
+            scorePercentage,
             timestamp,
             answers {
                 questionId,
