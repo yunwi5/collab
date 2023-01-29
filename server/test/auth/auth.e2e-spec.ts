@@ -20,6 +20,10 @@ describe('Auth resolver (e2e)', () => {
     app = await E2eTestUtil.instance.beforeAll(__filename);
   });
 
+  afterAll(async () => {
+    await E2eTestUtil.instance.afterAll(__filename, app);
+  });
+
   it('Should sign up user', () => {
     const signUpInput = generateSignUpVariables().signUpInput;
     userCredentials = {
@@ -93,9 +97,5 @@ describe('Auth resolver (e2e)', () => {
         expect(res.body.errors).toBeDefined();
         expect(res.body.data).toBeNull();
       });
-  });
-
-  afterAll(async () => {
-    await E2eTestUtil.instance.afterAll(__filename, app);
   });
 });

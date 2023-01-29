@@ -42,8 +42,12 @@ describe('Quiz resolver (e2e)', () => {
     access_token = authResponse.access_token;
   });
 
+  afterAll(async () => {
+    await E2eTestUtil.instance.afterAll(__filename, app);
+  });
+
   it('Should create a quiz', () => {
-    const createQuizInput = generateCreateQuizData().createQuizInput;
+    const createQuizInput = generateCreateQuizData(false).createQuizInput;
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -192,9 +196,5 @@ describe('Quiz resolver (e2e)', () => {
         expect(res.body.errors).toBeDefined();
         expect(res.body.data).toBeNull();
       });
-  });
-
-  afterAll(async () => {
-    await E2eTestUtil.instance.afterAll(__filename, app);
   });
 });
