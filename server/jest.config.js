@@ -1,3 +1,5 @@
+process.env['TESTING'] = 'true';
+
 module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: './',
