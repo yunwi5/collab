@@ -20,8 +20,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:service": "jest --config ./jest-service.config.js",
-    "test:e2e": "jest --config ./test/jest-e2e.config.js",
+    "test:service": "jest --config ./jest-service.config.js --detectOpenHandles --forceExit --verbose --runInBand --bail",
+    "test:e2e": "jest --config ./test/jest-e2e.config.js --detectOpenHandles --forceExit --verbose --runInBand --bail",
     "test:e2e:restart": "yarn db:restart && yarn test:e2e"
   },
   "dependencies": {
