@@ -2,13 +2,23 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from 'src/users/users.service';
 import Chance from 'chance';
 import { User } from 'src/users/entities';
-import { LevelType } from 'src/models/level/Level.enum';
+import { LevelTypeList } from 'src/models/level/Level.enum';
+import { getRandomInt, selectRandomElement } from 'src/utils/random.util';
+import { find } from 'lodash';
 import { QuizzesModule } from './quizzes.module';
 import { QuizzesService } from './quizzes.service';
-import { CreateQuizInput } from './dto';
+import { CreateQuizInput, UpdateQuizInput } from './dto';
 import { Quiz } from './entities/quiz.entity';
 
 const chance = new Chance();
+
+const createRandomCreateQuizInput = (): CreateQuizInput => ({
+  name: `quiz-${chance.name()}`,
+  topic: chance.string({ alpha: true }),
+  tags: [chance.string()],
+  level: selectRandomElement(LevelTypeList),
+  passScore: getRandomInt(50, 100),
+});
 
 describe('QuizzesService', () => {
   let usersService: UsersService;
@@ -37,19 +47,39 @@ describe('QuizzesService', () => {
   });
 
   it('should create a quiz', async () => {
-    const createQuizDto: CreateQuizInput = {
-      name: `quiz-${chance.name()}`,
-      topic: chance.string({ alpha: true }),
-      tags: [],
-      level: LevelType.BEGINNER,
-      passScore: 50,
-    };
+    const createQuizDto: CreateQuizInput = createRandomCreateQuizInput();
 
     quiz = await quizzesService.create(user.userId, createQuizDto);
     expect(quiz).toMatchObject(createQuizDto);
     expect(quiz.quizId).toBeDefined();
     expect(quiz.createdAt).toBeNumber();
     expect(quiz.updatedAt).toBeNumber();
+  });
+
+  it('should find by creator', async () => {
+    const userQuizzes: Quiz[] = await quizzesService.findAllByCreator(
+      user.userId,
+    );
+    expect(find(userQuizzes, ['quizId', quiz.quizId])).toBeDefined();
+  });
+
+  it('should update the quiz', async () => {
+    const updateQuizDto: UpdateQuizInput = {
+      quizId: quiz.quizId,
+      name: `quiz-${chance.name()}-updated`,
+      topic: chance.string({ alpha: true }),
+      tags: [chance.string({ alpha: true }), chance.string({ alpha: true })],
+      level: selectRandomElement(LevelTypeList),
+      passScore: getRandomInt(50, 100),
+    };
+
+    quiz = await quizzesService.update(user.userId, updateQuizDto);
+    expect(quiz.quizId).toBeDefined();
+    expect(quiz.name).toEqual(updateQuizDto.name);
+    expect(quiz.topic).toEqual(updateQuizDto.topic);
+    expect(quiz.passScore).toEqual(updateQuizDto.passScore);
+    expect(quiz.level).toEqual(updateQuizDto.level);
+    expect(quiz.tags).toEqual(updateQuizDto.tags);
   });
 
   it('should remove a quiz', async () => {
