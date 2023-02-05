@@ -3,12 +3,15 @@ import fs from 'fs';
 import util from 'util';
 import aws from 'aws-sdk';
 import { envConfig } from 'src/config/env.config';
+import { getLogger } from 'src/config/logger.config';
 
 const unlinkFile = util.promisify(fs.unlink);
 
 @Injectable()
 export class S3Service {
-  private s3: aws.S3;
+  private readonly logger = getLogger(S3Service.name);
+
+  private readonly s3: aws.S3;
 
   constructor() {
     this.s3 = new aws.S3({
@@ -32,6 +35,8 @@ export class S3Service {
       Key: file.filename,
     };
 
+    this.logger.info('upload image; params: %s;', params);
+
     return this.s3.upload(params).promise();
   }
 
@@ -49,6 +54,8 @@ export class S3Service {
       Bucket: envConfig.ImageBucketName,
       Key: imageKey,
     };
+
+    this.logger.info('delete image; params: %s;', params);
 
     return this.s3.deleteObject(params).promise();
   }

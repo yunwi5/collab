@@ -9,12 +9,13 @@ export function isValidationError(err: Error | unknown) {
 }
 
 export function getErrorMessage(err: unknown, defaultMessage?: string) {
+  console.log('IS PRODUCTION:', isProduction());
   if (err instanceof Error) {
     if (isProduction())
       return `Error{name: ${err.name}, message: ${
         defaultMessage ?? 'Something went wrong'
       }}`;
-    return `Error{name: ${err.name}, message: ${err.message}, stack: ${err.stack}}`;
+    return `Error{name: ${err.name}, message: ${err.message}}`;
   }
 
   return `Error{name: Unkown, message: ${

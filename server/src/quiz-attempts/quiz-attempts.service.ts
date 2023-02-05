@@ -8,6 +8,7 @@ import { QuizzesService } from 'src/quizzes/quizzes.service';
 import { QuestionsService } from 'src/questions/questions.service';
 import { getErrorMessage, isValidationError } from 'src/utils/error.util';
 import { dbTables } from 'src/config/env.config';
+import { getLogger } from 'src/config/logger.config';
 import { QuizAttemptInput } from './dto';
 import {
   getQuizScore,
@@ -19,6 +20,8 @@ import { QuizAttemptModel } from './db/quiz-attempt.model';
 
 @Injectable()
 export class QuizAttemptsService {
+  private readonly logger = getLogger(QuizAttemptsService.name);
+
   constructor(
     private readonly quizzesService: QuizzesService,
     private readonly questionsService: QuestionsService,
@@ -35,7 +38,10 @@ export class QuizAttemptsService {
       this.quizzesService.findByCreatorAndQuizId(creatorId, quizId),
       this.questionsService.findAllByQuizId(quizId),
     ]).catch(err => {
-      console.log(getErrorMessage(err));
+      this.logger.error(
+        'cold not get quizzes and questions; err: %s;',
+        getErrorMessage(err),
+      );
       throw new InternalServerErrorException(
         'Could not find quiz and questions',
       );
@@ -63,6 +69,11 @@ export class QuizAttemptsService {
       const attemptCreated = await QuizAttemptModel.create(attemptHistory);
       return attemptCreated;
     } catch (err) {
+      this.logger.error(
+        'could not create quiz attempt; input %s; err: %s;',
+        createQuizAttemptInput,
+        getErrorMessage(err),
+      );
       if (isValidationError(err)) {
         throw new BadRequestException('Quiz attempt input is invalid');
       }
@@ -75,6 +86,11 @@ export class QuizAttemptsService {
       const quizAttempts = await QuizAttemptModel.query({ quizId }).exec();
       return quizAttempts;
     } catch (err) {
+      this.logger.error(
+        'could not find attempts by quiz ID; quiz ID: %s; err: %s;',
+        quizId,
+        getErrorMessage(err),
+      );
       throw new InternalServerErrorException(getErrorMessage(err));
     }
   }
@@ -89,6 +105,10 @@ export class QuizAttemptsService {
 
       return userAttempts;
     } catch (err) {
+      this.logger.error(
+        'could not find attempts by user ID; user ID: %s;',
+        userId,
+      );
       return null;
     }
   }

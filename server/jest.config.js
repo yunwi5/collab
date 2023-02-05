@@ -1,4 +1,5 @@
 process.env['TESTING'] = 'true';
+process.env['NODE_ENV'] = 'development';
 
 module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],

@@ -9,10 +9,13 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { SsoUserInput } from 'src/auth-sso/dto';
 import { User } from 'src/users/entities/user.entity';
+import { getLogger } from 'src/config/logger.config';
 import { SignUpInput, SignInResponse } from './dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = getLogger(AuthService.name);
+
   constructor(
     private userService: UsersService,
     private jwtService: JwtService,
