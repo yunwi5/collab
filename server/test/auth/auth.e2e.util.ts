@@ -1,13 +1,13 @@
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
+import { User } from 'src/users/entities';
+import { GRAPHQL_ENDPOINT } from 'test/constant';
 import {
   SIGN_UP_MUTATION,
   SIGN_UP_OPERATION_NAME,
   generateSignUpVariables,
 } from './signup.helper';
-import { User } from 'src/users/entities';
 import { SIGN_IN_MUTATION, SIGN_IN_OPERATION_NAME } from './signin.helper';
-import { GRAPHQL_ENDPOINT } from 'test/constant';
 
 type SignUpInput = {
   username: string;
@@ -36,7 +36,7 @@ export const signUp = async (
 };
 
 export const signUpAndIn = async (app: INestApplication) => {
-  const signUpInput = generateSignUpVariables().signUpInput;
+  const { signUpInput } = generateSignUpVariables();
   let authResponse: { access_token: string; user: User };
 
   await signUp(app, signUpInput);

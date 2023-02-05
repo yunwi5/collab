@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export enum AuthProvider {
   GOOGLE = 'google',
   GITHUB = 'github',

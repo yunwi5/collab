@@ -1,5 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
+import { E2eTestUtil } from 'test/e2e-test.util';
 import {
   SIGN_UP_MUTATION,
   SIGN_UP_OPERATION_NAME,
@@ -8,7 +9,6 @@ import {
 } from './signup.helper';
 
 import { SIGN_IN_MUTATION, SIGN_IN_OPERATION_NAME } from './signin.helper';
-import { E2eTestUtil } from 'test/e2e-test.util';
 
 const GRAPHQL_ENDPOINT = '/graphql';
 
@@ -25,7 +25,7 @@ describe('Auth resolver (e2e)', () => {
   });
 
   it('Should sign up user', () => {
-    const signUpInput = generateSignUpVariables().signUpInput;
+    const { signUpInput } = generateSignUpVariables();
     userCredentials = {
       username: signUpInput.username,
       password: signUpInput.password,
@@ -49,7 +49,7 @@ describe('Auth resolver (e2e)', () => {
   });
 
   it('cannot sign up user with invalid input', () => {
-    const signUpInput = generateInvalidSignUpVariables().signUpInput;
+    const { signUpInput } = generateInvalidSignUpVariables();
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)

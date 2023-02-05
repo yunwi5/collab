@@ -1,4 +1,5 @@
 import Chance from 'chance';
+
 const chance = new Chance();
 
 export const CREATE_USER_OPERATION_NAME = 'CreateUser';

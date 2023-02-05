@@ -1,4 +1,5 @@
 import Chance from 'chance';
+
 const chance = new Chance();
 
 export const SIGN_UP_OPERATION_NAME = 'SignUp';

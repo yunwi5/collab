@@ -5,6 +5,9 @@ import { signUpAndIn } from 'test/auth/auth.e2e.util';
 import { createRandomQuiz } from 'test/quizzes/quiz.e2e.util';
 import { E2eTestUtil } from 'test/e2e-test.util';
 import { find } from 'lodash';
+import { GRAPHQL_ENDPOINT } from 'test/constant';
+import { QuizAttempt } from 'src/quiz-attempts/entities';
+import { User } from 'src/users/entities';
 import {
   FIND_QUIZ_ATTEMPTS_BY_QUIZ_OPERATION_NAME,
   FIND_QUIZ_ATTEMPTS_BY_QUIZ_QUERY,
@@ -16,9 +19,6 @@ import {
   SUBMIT_QUIZ_ATTEMPT_OPERATION_NAME,
   generateSubmitQuizAttemptData,
 } from './quiz-attempt.helper';
-import { GRAPHQL_ENDPOINT } from 'test/constant';
-import { QuizAttempt } from 'src/quiz-attempts/entities';
-import { User } from 'src/users/entities';
 
 describe('Quiz resolver (e2e)', () => {
   let app: INestApplication;
@@ -41,8 +41,7 @@ describe('Quiz resolver (e2e)', () => {
   });
 
   it('Should create a quiz attempt', async () => {
-    const quizAttemptInput =
-      generateSubmitQuizAttemptData(quiz).quizAttemptInput;
+    const { quizAttemptInput } = generateSubmitQuizAttemptData(quiz);
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -74,7 +73,7 @@ describe('Quiz resolver (e2e)', () => {
       })
       .expect(200)
       .expect(res => {
-        const quizAttempt: QuizAttempt = res.body.data.quizAttempt;
+        const { quizAttempt } = res.body.data;
         expect(quizAttempt).toBeDefined();
         expect(quizAttempt).toMatchObject({
           quizId: quiz.quizId,
