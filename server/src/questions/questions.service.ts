@@ -9,12 +9,15 @@ import crypto from 'crypto';
 
 import { getErrorMessage, isValidationError } from 'src/utils/error.util';
 import { QuizzesService } from 'src/quizzes/quizzes.service';
+import { getLogger } from 'src/config/logger.config';
 import { Question } from './entities';
 import { QuestionModel } from './db/question.model';
 import { CreateQuestionInput, UpdateQuestionInput } from './dto';
 
 @Injectable()
 export class QuestionsService {
+  private readonly logger = getLogger(QuestionsService.name);
+
   constructor(private readonly quizzesService: QuizzesService) {}
 
   async isQuizCreator(userId: string, quizId: string) {
@@ -22,6 +25,7 @@ export class QuestionsService {
       userId,
       quizId,
     );
+
     return foundQuiz != null;
   }
 
@@ -43,6 +47,11 @@ export class QuestionsService {
       const question = await QuestionModel.create(questionInput);
       return question;
     } catch (err) {
+      this.logger.error(
+        'could not create a question; question input: %s; err: %s;',
+        createQuestionInput,
+        getErrorMessage(err),
+      );
       if (err instanceof Error && isValidationError(err)) {
         throw new BadRequestException('Question input invalid.');
       }
@@ -70,12 +79,17 @@ export class QuestionsService {
     try {
       const result = await QuestionModel.batchPut(newQuestions);
       if (result.unprocessedItems.length > 0)
-        console.warn(
+        this.logger.warn(
           `${result.unprocessedItems.length} question items were unprocessed`,
         );
 
       return await this.findAllByQuizId(quizId);
     } catch (err) {
+      this.logger.error(
+        'could not batch create questions; quiz ID: %s; err: %s;',
+        quizId,
+        getErrorMessage(err),
+      );
       if (err instanceof Error && isValidationError(err)) {
         throw new BadRequestException('Question inputs invalid.');
       }
@@ -88,12 +102,18 @@ export class QuestionsService {
       const questions = await QuestionModel.query({ quizId }).exec();
       return questions;
     } catch (err) {
+      this.logger.error(
+        'could not find questions by quiz ID; ID: %s; err: %s;',
+        quizId,
+        getErrorMessage(err),
+      );
       throw new InternalServerErrorException(getErrorMessage(err));
     }
   }
 
   async findByQuizAndQuestionId(quizId: string, questionId: string) {
     const question = await QuestionModel.get({ quizId, questionId });
+
     return question;
   }
 
@@ -120,6 +140,12 @@ export class QuestionsService {
 
       return updatedQuestion;
     } catch (err) {
+      this.logger.error(
+        'could not update question; quiz ID %s; question ID: %s; err: %s;',
+        quizId,
+        questionId,
+        getErrorMessage(err),
+      );
       if (err instanceof Error && isValidationError(err)) {
         throw new BadRequestException('Quiz question input is invalid');
       }
@@ -145,6 +171,12 @@ export class QuestionsService {
       await question.delete();
       return question;
     } catch (err) {
+      this.logger.error(
+        'could not remove question; quiz ID: %s question ID: %s; err: %s;',
+        quizId,
+        questionId,
+        getErrorMessage(err),
+      );
       throw new InternalServerErrorException(getErrorMessage(err));
     }
   }

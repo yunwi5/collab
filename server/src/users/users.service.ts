@@ -7,19 +7,27 @@ import crypto from 'crypto';
 
 import { dbTables } from 'src/config/env.config';
 import { SsoUserInput } from 'src/auth-sso/dto';
+import { getLogger } from 'src/config/logger.config';
+import { getErrorMessage } from 'src/utils/error.util';
 import { CreateUserInput, UpdateUserInput } from './dto';
 import { User } from './entities/user.entity';
 import { UserModel } from './db/user.model';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = getLogger(UsersService.name);
+
   async create(createUserInput: CreateUserInput | SsoUserInput): Promise<User> {
     try {
       const userId: string = crypto.randomUUID();
       const newUser = await UserModel.create({ userId, ...createUserInput });
+      this.logger.info('create a new user; user: %s;', newUser);
       return newUser;
     } catch (err) {
-      console.log((err as any).message);
+      this.logger.error(
+        'could not create a user; err: %s;',
+        getErrorMessage(err),
+      );
       throw new InternalServerErrorException('could not create a user');
     }
   }
@@ -29,7 +37,7 @@ export class UsersService {
       const users = await UserModel.scan().exec();
       return users;
     } catch (err) {
-      console.log((err as any).message);
+      this.logger.error('could not find users; err: %s;', getErrorMessage(err));
       throw new InternalServerErrorException('could not fetch users');
     }
   }
@@ -44,7 +52,11 @@ export class UsersService {
       const user = users[0];
       return user;
     } catch (err) {
-      console.log((err as any).message);
+      this.logger.error(
+        'could not find user by name; name: %s; err: %s;',
+        name,
+        getErrorMessage(err),
+      );
       throw new InternalServerErrorException('could not find user by name');
     }
   }
@@ -54,7 +66,11 @@ export class UsersService {
       const user = await UserModel.get(id);
       return user;
     } catch (err) {
-      console.log((err as any).message);
+      this.logger.error(
+        'could not find user by ID; ID: %s; err: %s;',
+        id,
+        getErrorMessage(err),
+      );
       throw new InternalServerErrorException('could not find user by id');
     }
   }
@@ -71,7 +87,12 @@ export class UsersService {
       const updated = await UserModel.update({ userId: id }, updateInput);
       return updated;
     } catch (err) {
-      console.log((err as any).message);
+      this.logger.error(
+        'could not update user by ID; ID: %s; input %s; err: %s;',
+        id,
+        updateUserInput,
+        getErrorMessage(err),
+      );
       throw new InternalServerErrorException('could not update user');
     }
   }
@@ -86,7 +107,11 @@ export class UsersService {
       await user.delete();
       return user;
     } catch (err) {
-      console.log((err as any).message);
+      this.logger.error(
+        'could not remove user by ID; ID: %s; err: %s;',
+        id,
+        getErrorMessage(err),
+      );
       throw new InternalServerErrorException('could not delete user by id');
     }
   }

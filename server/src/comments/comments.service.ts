@@ -9,6 +9,7 @@ import crypto from 'crypto';
 
 import { getErrorMessage, isValidationError } from 'src/utils/error.util';
 import { Vote } from 'src/models';
+import { getLogger } from 'src/config/logger.config';
 import {
   CreateCommentInput,
   CreateCommentVoteInput,
@@ -19,6 +20,8 @@ import { Comment } from './entities';
 
 @Injectable()
 export class CommentsService {
+  private readonly logger = getLogger(CommentsService.name);
+
   async validateReplyTo(commentInput: CreateCommentInput): Promise<boolean> {
     if (!commentInput.replyTo) return true;
 
@@ -50,6 +53,7 @@ export class CommentsService {
       return comment;
     } catch (err) {
       const message = getErrorMessage(err);
+      this.logger.error('could not create a comment; err: %s;', message);
       if (isValidationError(err)) {
         throw new BadRequestException(message);
       }
@@ -61,6 +65,11 @@ export class CommentsService {
     try {
       return await CommentModel.query({ parentId }).exec();
     } catch (err) {
+      this.logger.error(
+        'could not find comments by parent; parent ID: %s; err: %s;',
+        parentId,
+        getErrorMessage(err),
+      );
       throw new InternalServerErrorException(getErrorMessage(err));
     }
   }
@@ -107,6 +116,11 @@ export class CommentsService {
       return updatedComment;
     } catch (err) {
       const message = getErrorMessage(err);
+      this.logger.error(
+        'could not update comment; update input: %s; err: %s;',
+        updateCommentInput,
+        message,
+      );
       if (isValidationError(err)) {
         throw new BadRequestException(message);
       }
@@ -120,9 +134,15 @@ export class CommentsService {
       parentId,
       commentId,
     );
-    await existingComment.delete();
 
-    return existingComment;
+    try {
+      await existingComment.delete();
+      return existingComment;
+    } catch (err) {
+      const message = getErrorMessage(err);
+      this.logger.error('could not remove comment; err: %s;', message);
+      throw new InternalServerErrorException(message);
+    }
   }
 
   async voteComment(
@@ -146,6 +166,7 @@ export class CommentsService {
     comment.votes = [...filteredVotes, vote];
 
     await comment.save();
+
     return comment;
   }
 }

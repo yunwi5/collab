@@ -80,7 +80,7 @@ describe('Quiz resolver (e2e)', () => {
       })
       .expect(200)
       .expect(res => {
-        const { quizzes } = res.body.data;
+        const { quizzes }: { quizzes: Quiz[] } = res.body.data;
         expect(Array.isArray(quizzes)).toBe(true);
         expect(quizzes.length).toBeGreaterThanOrEqual(1);
       });
