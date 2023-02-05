@@ -13,6 +13,7 @@ import { getErrorMessage, isValidationError } from 'src/utils/error.util';
 import { isSameName } from 'src/utils/string.util';
 import { QuestionsService } from 'src/questions/questions.service';
 import { CreateQuestionBaseInput } from 'src/questions/dto';
+import { getLogger } from 'src/config/logger.config';
 import { CreateQuizInput } from './dto/create-quiz.input';
 import { UpdateQuizInput } from './dto/update-quiz.input';
 import { QuizModel } from './db/quiz.model';
@@ -21,6 +22,8 @@ import { CreateQuizVoteInput } from './dto/create-quiz-vote.input';
 
 @Injectable()
 export class QuizzesService {
+  private readonly logger = getLogger(QuizzesService.name);
+
   constructor(
     @Inject(forwardRef(() => QuestionsService))
     private readonly questionsService: QuestionsService,
@@ -81,6 +84,7 @@ export class QuizzesService {
   async findAll(): Promise<Quiz[]> {
     try {
       const quizzes = await QuizModel.scan().exec();
+      this.logger.info('find all quizzes; count: %s;', quizzes.length);
       return quizzes;
     } catch (err) {
       throw new InternalServerErrorException(getErrorMessage(err));
