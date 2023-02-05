@@ -8,7 +8,6 @@ import { GqlAuthGuard } from './guards/gql-auth.guard';
 
 @Resolver()
 export class AuthResolver {
-  // eslint-disable-next-line no-unused-vars
   constructor(private authService: AuthService) {}
 
   @Mutation(() => SignInResponse)

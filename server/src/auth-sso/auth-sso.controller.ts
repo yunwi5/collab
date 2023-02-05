@@ -4,7 +4,6 @@ import { GithubGuard, GoogleOauthGuard } from './guards';
 
 @Controller('auth')
 export class AuthSsoController {
-  // eslint-disable-next-line no-unused-vars
   constructor(private authService: AuthService) {}
 
   @Get('google')
