@@ -9,8 +9,13 @@ export function isValidationError(err: Error | unknown) {
 }
 
 export function getErrorMessage(err: unknown, defaultMessage?: string) {
-  if (!isProduction() && err instanceof Error)
-    return `Error{name: ${err.name}, message: ${err.message}}`;
+  if (err instanceof Error) {
+    if (isProduction())
+      return `Error{name: ${err.name}, message: ${
+        defaultMessage ?? 'Something went wrong'
+      }}`;
+    return `Error{name: ${err.name}, message: ${err.message}, stack: ${err.stack}}`;
+  }
 
   return `Error{name: Unkown, message: ${
     defaultMessage || 'Something went wrong'
