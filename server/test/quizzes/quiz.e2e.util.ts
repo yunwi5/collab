@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { GRAPHQL_ENDPOINT } from 'test/constant';
+import { Quiz } from 'src/quizzes/entities/quiz.entity';
 import {
   CREATE_QUIZ_MUTATION,
   CREATE_QUIZ_OPERATION_NAME,
@@ -8,15 +9,14 @@ import {
   FIND_QUIZ_QUERY,
   generateCreateQuizData,
 } from './quiz.helper';
-import { Quiz } from 'src/quizzes/entities/quiz.entity';
 
 export const createRandomQuiz = async (
   app: INestApplication,
   access_token: string,
-  shouldCreateQuestions: boolean = false,
+  shouldCreateQuestions = false,
 ) => {
   let quiz: Quiz;
-  const createQuizInput = generateCreateQuizData(shouldCreateQuestions).createQuizInput;
+  const { createQuizInput } = generateCreateQuizData(shouldCreateQuestions);
 
   await request(app.getHttpServer())
     .post(GRAPHQL_ENDPOINT)
@@ -49,7 +49,7 @@ export const findQuiz = async (props: {
     .send({
       operationName: FIND_QUIZ_OPERATION_NAME,
       query: FIND_QUIZ_QUERY,
-      variables: { creatorId: creatorId, quizId: quizId },
+      variables: { creatorId, quizId },
     })
     .expect(200)
     .expect(res => {

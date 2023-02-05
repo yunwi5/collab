@@ -1,13 +1,13 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { User } from 'src/users/entities';
+import { E2eTestUtil } from 'test/e2e-test.util';
 import {
   CREATE_USER_MUTATION,
   CREATE_USER_OPERATION_NAME,
   generateCreateUserVariables,
 } from './create.user.helper';
 import { GET_USERS_OPERATION_NAME, GET_USERS_QUERY } from './get.users.helper';
-import { E2eTestUtil } from 'test/e2e-test.util';
 
 const GRAPHQL_ENDPOINT = '/graphql';
 
@@ -38,7 +38,7 @@ describe('Users resolver (e2e)', () => {
 
   describe('Create user', () => {
     it('Should create an user with user mutation', () => {
-      const createUserInput = generateCreateUserVariables().createUserInput;
+      const { createUserInput } = generateCreateUserVariables();
 
       return request(app.getHttpServer())
         .post(GRAPHQL_ENDPOINT)

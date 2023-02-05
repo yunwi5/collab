@@ -1,5 +1,5 @@
 import Chance from 'chance';
-import { VoteKeyList } from 'src/models';
+
 const chance = new Chance();
 
 export const CREATE_COMMENT_OPERATION_NAME = 'CreateComment';

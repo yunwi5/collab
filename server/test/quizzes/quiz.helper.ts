@@ -197,7 +197,7 @@ export const generateUpdateQuizData = (quizId: string) => {
     updateQuizInput: {
       quizId,
       topic: chance.string(),
-      name: chance.name() + ' updated',
+      name: `${chance.name()} updated`,
       passScore: chance.integer({ min: 50, max: 100 }),
       level: chance.pickone(LevelKeyList),
       tags: [chance.string(), chance.string()],

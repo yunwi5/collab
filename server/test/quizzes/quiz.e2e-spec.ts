@@ -3,6 +3,12 @@ import { INestApplication } from '@nestjs/common';
 import { User } from 'src/users/entities';
 import { Quiz } from 'src/quizzes/entities/quiz.entity';
 import { GRAPHQL_ENDPOINT } from 'test/constant';
+import {
+  CREATE_COMMENT_MUTATION,
+  CREATE_COMMENT_OPERATION_NAME,
+  generateCreateCommentData,
+} from 'test/comments/comment.helper';
+import { E2eTestUtil } from 'test/e2e-test.util';
 import { signUpAndIn } from '../auth/auth.e2e.util';
 import {
   CREATE_QUIZ_MUTATION,
@@ -21,12 +27,6 @@ import {
   generateUpdateQuizData,
   generateVoteQuizData,
 } from './quiz.helper';
-import {
-  CREATE_COMMENT_MUTATION,
-  CREATE_COMMENT_OPERATION_NAME,
-  generateCreateCommentData,
-} from 'test/comments/comment.helper';
-import { E2eTestUtil } from 'test/e2e-test.util';
 
 describe('Quiz resolver (e2e)', () => {
   let app: INestApplication;
@@ -47,7 +47,7 @@ describe('Quiz resolver (e2e)', () => {
   });
 
   it('Should create a quiz', () => {
-    const createQuizInput = generateCreateQuizData(false).createQuizInput;
+    const { createQuizInput } = generateCreateQuizData(false);
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -80,7 +80,7 @@ describe('Quiz resolver (e2e)', () => {
       })
       .expect(200)
       .expect(res => {
-        const quizzes: Quiz[] = res.body.data.quizzes;
+        const { quizzes } = res.body.data;
         expect(Array.isArray(quizzes)).toBe(true);
         expect(quizzes.length).toBeGreaterThanOrEqual(1);
       });
@@ -103,7 +103,7 @@ describe('Quiz resolver (e2e)', () => {
   });
 
   it('Should update the quiz', () => {
-    const updateQuizInput = generateUpdateQuizData(quiz.quizId).updateQuizInput;
+    const { updateQuizInput } = generateUpdateQuizData(quiz.quizId);
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -124,7 +124,7 @@ describe('Quiz resolver (e2e)', () => {
   });
 
   it('Should vote the quiz', () => {
-    const createVoteInput = generateVoteQuizData(quiz).createVoteInput;
+    const { createVoteInput } = generateVoteQuizData(quiz);
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -146,9 +146,9 @@ describe('Quiz resolver (e2e)', () => {
   });
 
   it('Should comment on the quiz', () => {
-    const createCommentInput = generateCreateCommentData({
+    const { createCommentInput } = generateCreateCommentData({
       parentId: quiz.quizId,
-    }).createCommentInput;
+    });
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)

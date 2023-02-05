@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from 'src/app.module';
 
 export const sleep = (milliseconds: number) => {
+  // eslint-disable-next-line no-promise-executor-return
   return new Promise(resolve => setTimeout(resolve, milliseconds));
 };
 

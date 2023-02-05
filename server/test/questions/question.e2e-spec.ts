@@ -4,6 +4,9 @@ import { Quiz } from 'src/quizzes/entities/quiz.entity';
 import { GRAPHQL_ENDPOINT } from 'test/constant';
 import { signUpAndIn } from 'test/auth/auth.e2e.util';
 import { createRandomQuiz, findQuiz } from 'test/quizzes/quiz.e2e.util';
+import { Question } from 'src/questions/entities';
+import { E2eTestUtil } from 'test/e2e-test.util';
+import { find, random } from 'lodash';
 import {
   CREATE_QUESTIONS_MUTATION,
   CREATE_QUESTIONS_OPERATION_NAME,
@@ -19,9 +22,6 @@ import {
   generateCreateQuestionListData,
   generateUpdateQuestionData,
 } from './question.helper';
-import { Question } from 'src/questions/entities';
-import { E2eTestUtil } from 'test/e2e-test.util';
-import { find, random } from 'lodash';
 
 describe('Quiz resolver (e2e)', () => {
   let app: INestApplication;
@@ -43,9 +43,7 @@ describe('Quiz resolver (e2e)', () => {
   });
 
   it('Should create a question', async () => {
-    const createQuestionInput = generateCreateQuestionData(
-      quiz.quizId,
-    ).createQuestionInput;
+    const { createQuestionInput } = generateCreateQuestionData(quiz.quizId);
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -64,10 +62,10 @@ describe('Quiz resolver (e2e)', () => {
   });
 
   it('Should batch create question', async () => {
-    const createQuestionInputs = generateCreateQuestionListData(
+    const { createQuestionInputs } = generateCreateQuestionListData(
       quiz.quizId,
       random(1, 5),
-    ).createQuestionInputs;
+    );
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -112,8 +110,7 @@ describe('Quiz resolver (e2e)', () => {
   });
 
   it('Should update a question', async () => {
-    const updateQuestionInput =
-      generateUpdateQuestionData(question).updateQuestionInput;
+    const { updateQuestionInput } = generateUpdateQuestionData(question);
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)

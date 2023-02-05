@@ -18,7 +18,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['dist/**/**', 'test/**', 'jest*.config.js', 'global.d.ts'],
+  ignorePatterns: ['dist/**/**', 'jest*.config.js', 'global.d.ts'],
   rules: {
     'prettier/prettier': 'error',
     'class-methods-use-this': 'off',
@@ -40,5 +40,6 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/naming-convention': 'off',
   },
 };
