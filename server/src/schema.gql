@@ -107,6 +107,7 @@ type Query {
   quizAttemptsByUser(userId: String!): [QuizAttempt!]!
   quizzes: [Quiz!]!
   quizzesByCreator(creatorId: String!): [Quiz!]!
+  quizzesByTopic(topic: String!): [Quiz!]!
   user(id: String!): User!
   users: [User!]!
 }

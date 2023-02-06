@@ -87,6 +87,22 @@ export class QuizzesService {
       this.logger.info('find all quizzes; count: %s;', quizzes.length);
       return quizzes;
     } catch (err) {
+      this.logger.error('could not all quizzes; err: %s', getErrorMessage(err));
+      throw new InternalServerErrorException(getErrorMessage(err));
+    }
+  }
+
+  async findAllbyTopic(topic: string): Promise<Quiz[]> {
+    try {
+      const quizzes = await QuizModel.scan().filter('topic').eq(topic).exec();
+      this.logger.info('find all quizzes by topic; count: %s;', quizzes.length);
+      return quizzes;
+    } catch (err) {
+      this.logger.error(
+        'could not find quizzes by topic; topic: %s; err: %s',
+        topic,
+        getErrorMessage(err),
+      );
       throw new InternalServerErrorException(getErrorMessage(err));
     }
   }
@@ -99,6 +115,11 @@ export class QuizzesService {
       const item = await QuizModel.get({ creatorId, quizId });
       return item;
     } catch (err) {
+      this.logger.error(
+        'could not find quiz by ID; quiz ID: %s; err: %s',
+        quizId,
+        getErrorMessage(err),
+      );
       return null;
     }
   }

@@ -51,6 +51,11 @@ export class QuizzesResolver {
     return this.quizzesService.findAllByCreator(creatorId);
   }
 
+  @Query(() => [Quiz], { name: 'quizzesByTopic' })
+  findAllByTopic(@Args('topic') topic: string) {
+    return this.quizzesService.findAllbyTopic(topic);
+  }
+
   @Query(() => Quiz, { name: 'quiz' })
   @UseGuards(JwtAuthGuard)
   async findOne(

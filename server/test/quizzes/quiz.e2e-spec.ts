@@ -9,10 +9,13 @@ import {
   generateCreateCommentData,
 } from 'test/comments/comment.helper';
 import { E2eTestUtil } from 'test/e2e-test.util';
+import { find } from 'lodash';
 import { signUpAndIn } from '../auth/auth.e2e.util';
 import {
   CREATE_QUIZ_MUTATION,
   CREATE_QUIZ_OPERATION_NAME,
+  FIND_QUIZZES_BY_TOPIC_OPERATION_NAME,
+  FIND_QUIZZES_BY_TOPIC_QUERY,
   FIND_QUIZZES_OPERATION_NAME,
   FIND_QUIZZES_QUERY,
   FIND_QUIZ_OPERATION_NAME,
@@ -32,7 +35,8 @@ describe('Quiz resolver (e2e)', () => {
   let app: INestApplication;
   let user: User;
   let access_token: string;
-  let quiz: Quiz;
+  let quizA: Quiz;
+  let quizB: Quiz;
 
   beforeAll(async () => {
     app = await E2eTestUtil.instance.beforeAll(__filename);
@@ -46,25 +50,47 @@ describe('Quiz resolver (e2e)', () => {
     await E2eTestUtil.instance.afterAll(__filename, app);
   });
 
-  it('Should create a quiz', () => {
-    const { createQuizInput } = generateCreateQuizData(false);
+  it('Should create a quiz', async () => {
+    const { createQuizInput: createQuizInputA } = generateCreateQuizData(false);
+    const { createQuizInput: createQuizInputB } = generateCreateQuizData(false);
 
-    return request(app.getHttpServer())
+    await request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
       .auth(access_token, { type: 'bearer' })
       .send({
         operationName: CREATE_QUIZ_OPERATION_NAME,
         query: CREATE_QUIZ_MUTATION,
-        variables: { createQuizInput },
+        variables: { createQuizInput: createQuizInputA },
       })
       .expect(200)
       .expect(res => {
-        quiz = res.body.data.createQuiz;
-        expect(quiz).toBeDefined();
-        expect(quiz.name).toEqual(createQuizInput.name);
-        expect(quiz.level).toEqual(createQuizInput.level);
-        expect(quiz.passScore).toEqual(createQuizInput.passScore);
-        expect(quiz.creator).toMatchObject({
+        quizA = res.body.data.createQuiz;
+        expect(quizA).toBeDefined();
+        expect(quizA.name).toEqual(createQuizInputA.name);
+        expect(quizA.level).toEqual(createQuizInputA.level);
+        expect(quizA.passScore).toEqual(createQuizInputA.passScore);
+        expect(quizA.creator).toMatchObject({
+          userId: user.userId,
+          username: user.username,
+        });
+      });
+
+    await request(app.getHttpServer())
+      .post(GRAPHQL_ENDPOINT)
+      .auth(access_token, { type: 'bearer' })
+      .send({
+        operationName: CREATE_QUIZ_OPERATION_NAME,
+        query: CREATE_QUIZ_MUTATION,
+        variables: { createQuizInput: createQuizInputB },
+      })
+      .expect(200)
+      .expect(res => {
+        quizB = res.body.data.createQuiz;
+        expect(quizB).toBeDefined();
+        expect(quizB.name).toEqual(createQuizInputB.name);
+        expect(quizB.level).toEqual(createQuizInputB.level);
+        expect(quizB.passScore).toEqual(createQuizInputB.passScore);
+        expect(quizB.creator).toMatchObject({
           userId: user.userId,
           username: user.username,
         });
@@ -86,6 +112,26 @@ describe('Quiz resolver (e2e)', () => {
       });
   });
 
+  it('Should get all quizzes by topic', async () => {
+    const promises = [quizA, quizB].map(quiz => {
+      return request(app.getHttpServer())
+        .post(GRAPHQL_ENDPOINT)
+        .auth(access_token, { type: 'bearer' })
+        .send({
+          operationName: FIND_QUIZZES_BY_TOPIC_OPERATION_NAME,
+          query: FIND_QUIZZES_BY_TOPIC_QUERY,
+          variables: { topic: quiz.topic },
+        })
+        .expect(200)
+        .expect(res => {
+          const quizzesFound: Quiz[] = res.body.data.quizzesByTopic;
+          expect(find(quizzesFound, ['quizId', quiz.quizId])).toBeDefined();
+        });
+    });
+
+    await Promise.all(promises);
+  });
+
   it('Should get a quiz', () => {
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -93,17 +139,17 @@ describe('Quiz resolver (e2e)', () => {
       .send({
         operationName: FIND_QUIZ_OPERATION_NAME,
         query: FIND_QUIZ_QUERY,
-        variables: { creatorId: quiz.creatorId, quizId: quiz.quizId },
+        variables: { creatorId: quizA.creatorId, quizId: quizA.quizId },
       })
       .expect(200)
       .expect(res => {
         const quizFound: Quiz = res.body.data.quiz;
-        expect(quizFound).toMatchObject(quiz);
+        expect(quizFound).toMatchObject(quizA);
       });
   });
 
   it('Should update the quiz', () => {
-    const { updateQuizInput } = generateUpdateQuizData(quiz.quizId);
+    const { updateQuizInput } = generateUpdateQuizData(quizA.quizId);
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -115,16 +161,16 @@ describe('Quiz resolver (e2e)', () => {
       })
       .expect(200)
       .expect(res => {
-        quiz = res.body.data.updateQuiz;
-        expect(quiz).toBeDefined();
-        expect(quiz.name).toEqual(updateQuizInput.name);
-        expect(quiz.level).toEqual(updateQuizInput.level);
-        expect(quiz.passScore).toEqual(updateQuizInput.passScore);
+        quizA = res.body.data.updateQuiz;
+        expect(quizA).toBeDefined();
+        expect(quizA.name).toEqual(updateQuizInput.name);
+        expect(quizA.level).toEqual(updateQuizInput.level);
+        expect(quizA.passScore).toEqual(updateQuizInput.passScore);
       });
   });
 
   it('Should vote the quiz', () => {
-    const { createVoteInput } = generateVoteQuizData(quiz);
+    const { createVoteInput } = generateVoteQuizData(quizA);
 
     return request(app.getHttpServer())
       .post(GRAPHQL_ENDPOINT)
@@ -136,9 +182,9 @@ describe('Quiz resolver (e2e)', () => {
       })
       .expect(200)
       .expect(res => {
-        quiz = res.body.data.voteQuiz;
-        expect(quiz.votes).toBeDefined();
-        const expectedVote = quiz.votes.find(
+        quizA = res.body.data.voteQuiz;
+        expect(quizA.votes).toBeDefined();
+        const expectedVote = quizA.votes.find(
           vote => vote.userId === user.userId,
         );
         expect(expectedVote.type).toBe(createVoteInput.type.toLowerCase());
@@ -147,7 +193,7 @@ describe('Quiz resolver (e2e)', () => {
 
   it('Should comment on the quiz', () => {
     const { createCommentInput } = generateCreateCommentData({
-      parentId: quiz.quizId,
+      parentId: quizA.quizId,
     });
 
     return request(app.getHttpServer())
@@ -161,7 +207,7 @@ describe('Quiz resolver (e2e)', () => {
       .expect(200)
       .expect(res => {
         const comment = res.body.data.createComment;
-        expect(comment.parentId).toEqual(quiz.quizId);
+        expect(comment.parentId).toEqual(quizA.quizId);
         expect(comment.content).toEqual(createCommentInput.content);
       });
   });
@@ -173,14 +219,14 @@ describe('Quiz resolver (e2e)', () => {
       .send({
         operationName: REMOVE_QUIZ_OPERATION_NAME,
         query: REMOVE_QUIZ_MUTATION,
-        variables: { quizId: quiz.quizId },
+        variables: { quizId: quizA.quizId },
       })
       .expect(200)
       .expect(res => {
         const deletedQuiz: Quiz = res.body.data.removeQuiz;
         expect(deletedQuiz).toBeDefined();
-        expect(quiz.quizId).toEqual(deletedQuiz.quizId);
-        expect(quiz.name).toEqual(deletedQuiz.name);
+        expect(quizA.quizId).toEqual(deletedQuiz.quizId);
+        expect(quizA.name).toEqual(deletedQuiz.name);
       });
 
     return request(app.getHttpServer())
@@ -189,7 +235,7 @@ describe('Quiz resolver (e2e)', () => {
       .send({
         operationName: FIND_QUIZ_OPERATION_NAME,
         query: FIND_QUIZ_QUERY,
-        variables: { creatorId: quiz.creator.userId, quizId: quiz.quizId },
+        variables: { creatorId: quizA.creator.userId, quizId: quizA.quizId },
       })
       .expect(200)
       .expect(res => {
