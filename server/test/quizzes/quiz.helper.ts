@@ -10,6 +10,8 @@ export const CREATE_QUIZ_OPERATION_NAME = 'CreateQuiz';
 
 export const FIND_QUIZZES_OPERATION_NAME = 'Quizzes';
 
+export const FIND_QUIZZES_BY_TOPIC_OPERATION_NAME = 'QuizzesByTopic';
+
 export const FIND_QUIZ_OPERATION_NAME = 'Quiz';
 
 export const UPDATE_QUIZ_OPERATION_NAME = 'UpdateQuiz';
@@ -45,6 +47,34 @@ export const CREATE_QUIZ_MUTATION = `
 export const FIND_QUIZZES_QUERY = `
    query Quizzes {
       quizzes {
+         quizId,
+         creatorId,
+         name,
+         topic,
+         passScore,
+         tags,
+         level,
+         creator {
+            userId,
+            username
+         },
+         votes {
+            userId,
+            type
+         },
+         comments {
+            parentId,
+            commentId,
+            userId,
+            content,
+         }
+      }
+   }
+`;
+
+export const FIND_QUIZZES_BY_TOPIC_QUERY = `
+   query QuizzesByTopic($topic: String!) {
+      quizzesByTopic(topic: $topic) {
          quizId,
          creatorId,
          name,
