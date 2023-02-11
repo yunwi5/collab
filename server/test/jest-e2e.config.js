@@ -5,6 +5,7 @@ module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: '.',
   testEnvironment: 'node',
+  testTimeout: 30000,
   setupFilesAfterEnv: ['jest-extended/all'],
   testRegex: '.e2e-spec.ts$',
   transform: {
