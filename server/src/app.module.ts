@@ -15,6 +15,7 @@ import { QuestionsModule } from './questions/questions.module';
 import { QuizAttemptsModule } from './quiz-attempts/quiz-attempts.module';
 import { S3Module } from './aws/s3/s3.module';
 import { CommentsModule } from './comments/comments.module';
+import { ArticleGroupsModule } from './article-groups/article-groups.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { CommentsModule } from './comments/comments.module';
     QuizAttemptsModule,
     S3Module,
     CommentsModule,
+    ArticleGroupsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

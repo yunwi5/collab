@@ -46,6 +46,10 @@ variable "article_group_table_name" {
   default = "ArticleGroup"
 }
 
+variable "article_group_creator_index" {
+  default = "ArticleGroupCreatorIndex"
+}
+
 variable "article_table_name" {
   default = "Article"
 }
