@@ -2,6 +2,15 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ArticleGroup {
+  createdAt: Long!
+  creatorId: String!
+  groupId: String!
+  icon: String
+  name: String!
+  updatedAt: Long!
+}
+
 type Comment {
   childComments: [Comment!]!
   commentId: ID!
@@ -14,6 +23,12 @@ type Comment {
   user: User!
   userId: ID!
   votes: [Vote!]!
+}
+
+input CreateArticleGroupInput {
+  creatorId: String!
+  icon: String
+  name: String!
 }
 
 input CreateCommentInput {
@@ -78,11 +93,13 @@ enum LevelType {
 scalar Long
 
 type Mutation {
+  createArticleGroup(createArticleGroupInput: CreateArticleGroupInput!): ArticleGroup!
   createComment(createCommentInput: CreateCommentInput!): Comment!
   createQuestion(createQuestionInput: CreateQuestionInput!): Question!
   createQuestions(createQuestionInputs: [CreateQuestionInput!]!): [Question!]!
   createQuiz(createQuizInput: CreateQuizInput!): Quiz!
   createUser(createUserInput: CreateUserInput!): User!
+  removeArticleGroup(groupId: String!): ArticleGroup!
   removeComment(commentId: String!, parentId: String!): Comment!
   removeQuestion(questionId: String!, quizId: String!): Question!
   removeQuiz(quizId: String!): Quiz!
@@ -90,6 +107,7 @@ type Mutation {
   signIn(signInInput: SignInInput!): SignInResponse!
   signUp(signUpInput: SignUpInput!): User!
   submitQuizAttempt(quizAttemptInput: QuizAttemptInput!): QuizAttempt!
+  updateArticleGroup(updateArticleGroupInput: UpdateArticleGroupInput!): ArticleGroup!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
   updateQuiz(updateQuizInput: UpdateQuizInput!): Quiz!
@@ -99,6 +117,8 @@ type Mutation {
 }
 
 type Query {
+  articleGroup(groupId: String!): ArticleGroup!
+  articleGroupsByCreator(creatorId: String!): [ArticleGroup!]!
   comment(commentId: String!, parentId: String!): Comment!
   questionsByQuiz(quizId: String!): [Question!]!
   quiz(creatorId: String!, quizId: String!): Quiz!
@@ -190,6 +210,13 @@ input SignUpInput {
   email: String!
   password: String!
   username: String!
+}
+
+input UpdateArticleGroupInput {
+  creatorId: String
+  groupId: String!
+  icon: String
+  name: String
 }
 
 input UpdateCommentInput {

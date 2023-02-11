@@ -1,55 +1,37 @@
 import * as dynamoose from 'dynamoose';
 
 import { dbTables } from 'src/config/env.config';
-import { voteSchema } from 'src/models';
 import { dbTableOptions } from 'src/config/db';
-import { LevelTypeList } from 'src/models/level/Level.enum';
 import { ArticleGroup } from '../entities';
 
 export const articleGroupSchema = new dynamoose.Schema(
   {
-    creatorId: {
+    groupId: {
       type: String,
       hashKey: true,
     },
-    quizId: {
-      type: String,
-      rangeKey: true,
-    },
-    topic: {
+    creatorId: {
       type: String,
       required: true,
+      index: {
+        name: dbTables.ArticleGroupCreatorIndex,
+        rangeKey: 'groupId',
+      },
     },
-    name: { type: String, required: true },
-    tags: {
-      type: Array,
-      schema: [String],
-      default: [],
-      validate: value =>
-        Array.isArray(value) &&
-        value.every(item => typeof item === 'string' && item.length > 1),
-    },
-    level: {
+    name: {
       type: String,
-      enum: LevelTypeList,
+      validate: value => value.toString().length >= 3,
+      required: true,
     },
-    passScore: {
-      type: Number,
-      default: 70,
-    },
-    votes: {
-      type: Array,
-      schema: [voteSchema],
-      default: [],
-    },
+    icon: String,
   },
   {
     timestamps: true,
   },
 );
 
-export const QuizModel = dynamoose.model<ArticleGroup>(
-  dbTables.QuizTable,
+export const ArticleGroupModel = dynamoose.model<ArticleGroup>(
+  dbTables.ArticleGroupTable,
   articleGroupSchema,
   dbTableOptions,
 );

@@ -7,14 +7,17 @@ if (process.env.NODE_ENV !== 'production') {
 
 const appName = process.env.APP_NAME || 'Collab';
 const userTable = `${appName}-${process.env.USER_TABLE}`;
-const userTableNameIndex = process.env.USER_TABLE_NAME_INDEX;
+const userTableNameIndex = process.env.USER_NAME_INDEX;
 
 const quizTable = `${appName}-${process.env.QUIZ_TABLE}`;
 const questionTable = `${appName}-${process.env.QUESTION_TABLE}`;
 
 const quizAttemptTable = `${appName}-${process.env.ATTEMPT_HISTORY_TABLE}`;
-const quizAttemptUserIndex = process.env.ATTEMPT_HISTORY_TABLE_USER_INDEX;
+const quizAttemptUserIndex = process.env.ATTEMPT_HISTORY_USER_INDEX;
 const commentTable = `${appName}-${process.env.COMMENT_TABLE}`;
+
+const articleGroupTable = `${appName}-${process.env.ARTICLE_GROUP_TABLE}`;
+const articleGroupCreatorIndex = process.env.ARTICLE_GROUP_CREATOR_INDEX;
 
 export const envConfig = Object.freeze({
   AwsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -41,4 +44,6 @@ export const dbTables = Object.freeze({
   QuizAttemptTable: quizAttemptTable,
   QuizAttemptUserIndex: quizAttemptUserIndex,
   CommentTable: commentTable,
+  ArticleGroupTable: articleGroupTable,
+  ArticleGroupCreatorIndex: articleGroupCreatorIndex,
 });
