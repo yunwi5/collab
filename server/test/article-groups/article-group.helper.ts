@@ -7,7 +7,10 @@ export const CREATE_ARTICLE_GROUP_OPERATION_NAME = 'CreateArticleGroup';
 export const FIND_ARTICLE_GROUP_OPERATION_NAME = 'ArticleGroup';
 
 export const FIND_ARTICLE_GROUPS_BY_CREATOR_OPERATION_NAME =
-  'ArticleGroupByCreator';
+  'ArticleGroupsByCreator';
+
+export const FIND_ARTICLE_GROUPS_BY_PARENT_OPERATION_NAME =
+  'ArticleGroupsByParent';
 
 export const UPDATE_ARTICLE_GROUP_OPERATION_NAME = 'UpdateArticleGroup';
 
@@ -24,13 +27,38 @@ export const CREATE_ARTICLE_GROUP_MUTATION = `
     }
 `;
 
-export const FIND_ARTICLE_GROUP_MUTATION = `
+export const FIND_ARTICLE_GROUP_QUERY = `
     query ArticleGroup($groupId: String!) {
         articleGroup(groupId: $groupId) {
             groupId,
             creatorId,
+            parentId,
             name,
-            icon
+            icon,
+            childGroups {
+              groupId,
+              creatorId,
+              name,
+              icon
+            }
+        }
+    }
+`;
+
+export const FIND_ARTICLE_GROUPS_BY_PARENT_QUERY = `
+    query ArticleGroupsByParent($parentId: String!) {
+        articleGroupsByParent(parentId: $parentId) {
+            groupId,
+            creatorId,
+            parentId,
+            name,
+            icon,
+            childGroups {
+              groupId,
+              creatorId,
+              name,
+              icon
+            }
         }
     }
 `;
