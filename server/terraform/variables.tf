@@ -50,6 +50,10 @@ variable "article_group_creator_index" {
   default = "ArticleGroupCreatorIndex"
 }
 
+variable "article_group_parent_index" {
+  default = "ArticleGroupParentIndex"
+}
+
 variable "article_table_name" {
   default = "Article"
 }

@@ -10,6 +10,9 @@ export class ArticleGroup extends Item {
   @Field(() => String)
   creatorId: string;
 
+  @Field(() => String, { nullable: true })
+  parentId?: string;
+
   @Field(() => String)
   name: string;
 
@@ -21,4 +24,7 @@ export class ArticleGroup extends Item {
 
   @Field(() => GraphQLLong)
   updatedAt: number;
+
+  @Field(() => [ArticleGroup])
+  childGroups: ArticleGroup[];
 }

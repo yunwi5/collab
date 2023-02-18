@@ -16,8 +16,8 @@ export const REMOVE_ARTICLE_GROUP_OPERATION_NAME = 'RemoveArticleGroup';
 export const CREATE_ARTICLE_GROUP_MUTATION = `
     mutation CreateArticleGroup($createArticleGroupInput: CreateArticleGroupInput!) {
         createArticleGroup(createArticleGroupInput: $createArticleGroupInput) {
+            parentId,
             groupId,
-            creatorId,
             name,
             icon
         }
@@ -57,10 +57,18 @@ export const REMOVE_ARTICLE_GROUP_MUTATION = `
     }
 `;
 
-export const generateCreateArticleGroupData = (creatorId: string) => {
+export const generateCreateArticleGroupData = (parentId: string = null) => {
+  if (parentId == null)
+    return {
+      createArticleGroupInput: {
+        name: chance.name({ prefix: true }),
+        icon: chance.name({ prefix: true }),
+      },
+    };
+
   return {
     createArticleGroupInput: {
-      creatorId,
+      parentId,
       name: chance.name({ prefix: true }),
       icon: chance.name({ prefix: true }),
     },

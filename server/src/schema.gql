@@ -3,11 +3,13 @@
 # ------------------------------------------------------
 
 type ArticleGroup {
+  childGroups: [ArticleGroup!]!
   createdAt: Long!
   creatorId: String!
   groupId: String!
   icon: String
   name: String!
+  parentId: String
   updatedAt: Long!
 }
 
@@ -26,9 +28,9 @@ type Comment {
 }
 
 input CreateArticleGroupInput {
-  creatorId: String!
   icon: String
   name: String!
+  parentId: String
 }
 
 input CreateCommentInput {
@@ -119,6 +121,7 @@ type Mutation {
 type Query {
   articleGroup(groupId: String!): ArticleGroup!
   articleGroupsByCreator(creatorId: String!): [ArticleGroup!]!
+  articleGroupsByParent(parentId: String!): [ArticleGroup!]!
   comment(commentId: String!, parentId: String!): Comment!
   questionsByQuiz(quizId: String!): [Question!]!
   quiz(creatorId: String!, quizId: String!): Quiz!
@@ -213,10 +216,10 @@ input SignUpInput {
 }
 
 input UpdateArticleGroupInput {
-  creatorId: String
   groupId: String!
   icon: String
   name: String
+  parentId: String
 }
 
 input UpdateCommentInput {
@@ -258,7 +261,7 @@ input UpdateUserInput {
 type User {
   createdAt: Long
   description: String
-  displayName: String!
+  displayName: String
   email: String!
   picture: String
   provider: String

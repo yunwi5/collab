@@ -4,18 +4,32 @@ resource "aws_dynamodb_table" "article_group_table" {
   hash_key     = "groupId"
 
   attribute {
+    name = "groupId"
+    type = "S"
+  }
+
+  attribute {
     name = "creatorId"
     type = "S"
   }
 
   attribute {
-    name = "groupId"
+    name = "parentId"
     type = "S"
   }
 
   global_secondary_index {
     name            = var.article_group_creator_index
     hash_key        = "creatorId"
+    range_key       = "groupId"
+    write_capacity  = 2
+    read_capacity   = 2
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = var.article_group_parent_index
+    hash_key        = "parentId"
     range_key       = "groupId"
     write_capacity  = 2
     read_capacity   = 2

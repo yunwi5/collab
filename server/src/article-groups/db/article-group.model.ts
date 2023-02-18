@@ -18,6 +18,13 @@ export const articleGroupSchema = new dynamoose.Schema(
         rangeKey: 'groupId',
       },
     },
+    parentId: {
+      type: String,
+      index: {
+        name: dbTables.ArticleGroupParentIndex,
+        rangeKey: 'groupId',
+      },
+    },
     name: {
       type: String,
       validate: value => value.toString().length >= 3,

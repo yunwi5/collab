@@ -3,8 +3,8 @@ import { IsOptional, Length } from 'class-validator';
 
 @InputType()
 export class CreateArticleGroupInput {
-  @Field(() => String)
-  creatorId: string;
+  @Field(() => String, { nullable: true })
+  parentId?: string;
 
   @Field(() => String)
   @Length(3, 25)
