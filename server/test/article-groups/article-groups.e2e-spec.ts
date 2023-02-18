@@ -15,15 +15,14 @@ import {
 
 describe('Quiz resolver (e2e)', () => {
   let app: INestApplication;
-  let user: User;
   let access_token: string;
   let groupA: ArticleGroup;
+  let groupAChild1: ArticleGroup;
 
   beforeAll(async () => {
     app = await E2eTestUtil.instance.beforeAll(__filename);
 
     const authResponse = await signUpAndIn(app);
-    user = authResponse.user;
     access_token = authResponse.access_token;
   });
 
@@ -33,9 +32,8 @@ describe('Quiz resolver (e2e)', () => {
 
   describe('CreateArticleGroup', () => {
     it('should create an article group', async () => {
-      const createArticleGroupInputA = generateCreateArticleGroupData(
-        user.userId,
-      ).createArticleGroupInput;
+      const createArticleGroupInputA =
+        generateCreateArticleGroupData().createArticleGroupInput;
 
       await request(app.getHttpServer())
         .post(GRAPHQL_ENDPOINT)
@@ -50,6 +48,25 @@ describe('Quiz resolver (e2e)', () => {
           console.log(res);
           groupA = res.body.data.createArticleGroup;
           expect(groupA).toMatchObject(createArticleGroupInputA);
+        });
+
+      const createArticleGroupInputB = generateCreateArticleGroupData(
+        groupA.groupId,
+      ).createArticleGroupInput;
+
+      await request(app.getHttpServer())
+        .post(GRAPHQL_ENDPOINT)
+        .auth(access_token, { type: 'bearer' })
+        .send({
+          operationName: CREATE_ARTICLE_GROUP_OPERATION_NAME,
+          query: CREATE_ARTICLE_GROUP_MUTATION,
+          variables: { createArticleGroupInput: createArticleGroupInputB },
+        })
+        .expect(200)
+        .expect(res => {
+          console.log(res);
+          groupAChild1 = res.body.data.createArticleGroup;
+          expect(groupAChild1).toMatchObject(createArticleGroupInputB);
         });
     });
   });

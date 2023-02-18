@@ -18,6 +18,7 @@ const commentTable = `${appName}-${process.env.COMMENT_TABLE}`;
 
 const articleGroupTable = `${appName}-${process.env.ARTICLE_GROUP_TABLE}`;
 const articleGroupCreatorIndex = process.env.ARTICLE_GROUP_CREATOR_INDEX;
+const articleGroupParentIndex = process.env.ARTICLE_GROUP_PARENT_INDEX;
 
 export const envConfig = Object.freeze({
   AwsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -46,4 +47,5 @@ export const dbTables = Object.freeze({
   CommentTable: commentTable,
   ArticleGroupTable: articleGroupTable,
   ArticleGroupCreatorIndex: articleGroupCreatorIndex,
+  ArticleGroupParentIndex: articleGroupParentIndex,
 });

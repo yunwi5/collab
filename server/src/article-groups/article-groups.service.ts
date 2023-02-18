@@ -18,9 +18,13 @@ import { ArticleGroup } from './entities';
 export class ArticleGroupsService {
   private readonly logger = getLogger(ArticleGroupsService.name);
 
-  async create(createArticleGroupInput: CreateArticleGroupInput) {
+  async create(
+    userId: string,
+    createArticleGroupInput: CreateArticleGroupInput,
+  ) {
     const articleGroupInput = {
       ...createArticleGroupInput,
+      creatorId: userId,
       groupId: crypto.randomUUID(),
     };
 
@@ -70,6 +74,32 @@ export class ArticleGroupsService {
     }
   }
 
+  async findAllByParentId(parentId: string): Promise<ArticleGroup[]> {
+    try {
+      const childArticleGroups = await ArticleGroupModel.query('parentId')
+        .eq(parentId)
+        .using(dbTables.ArticleGroupParentIndex)
+        .sort('ascending')
+        .exec();
+
+      this.logger.info(
+        'successfully retrieved child article groups; parent id: %s; count: %s;',
+        parentId,
+        childArticleGroups.length,
+      );
+
+      return childArticleGroups;
+    } catch (err) {
+      this.logger.error(
+        'failed to get child article groups; parent id: %s; err: %s;',
+        parentId,
+        getErrorMessage(err),
+      );
+
+      throw new InternalServerErrorException(getErrorMessage(err));
+    }
+  }
+
   async findById(groupId: string): Promise<ArticleGroup> {
     try {
       const group = await ArticleGroupModel.get(groupId);
@@ -90,8 +120,13 @@ export class ArticleGroupsService {
     userId: string,
     updateArticleGroupInput: UpdateArticleGroupInput,
   ) {
-    const { groupId, creatorId, ...updateProps } = updateArticleGroupInput;
-    if (userId !== creatorId) {
+    const { groupId, ...updateProps } = updateArticleGroupInput;
+    const existingGroup = await this.findById(groupId);
+
+    if (existingGroup == null) {
+      throw new NotFoundException('Article group not found.');
+    }
+    if (userId !== existingGroup.creatorId) {
       throw new UnauthorizedException(
         'Only the author of the group can update it',
       );
